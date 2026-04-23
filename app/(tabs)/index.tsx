@@ -1,9 +1,19 @@
 import { Image } from "expo-image";
-import { StyleSheet } from "react-native";
+import { Pressable, StyleSheet, TextInput } from "react-native";
 
 import ParallaxScrollView from "@/components/parallax-scroll-view";
+import { ThemedText } from "@/components/themed-text";
+import { ThemedView } from "@/components/themed-view";
+import { Controller, useForm } from "react-hook-form";
+import verifyCredentials from "../handlingForm";
 
 export default function HomeScreen() {
+  const { control, handleSubmit } = useForm();
+
+  const onSubmit = (data: any) => {
+    verifyCredentials(data);
+  };
+
   return (
     <ParallaxScrollView
       headerBackgroundColor={{ light: "#A1CEDC", dark: "#1D3D47" }}
@@ -14,14 +24,38 @@ export default function HomeScreen() {
         />
       }
     >
-      <form
-        action=""
-        style={{ display: "flex", flexDirection: "column", gap: 10 }}
-      >
-        <input type="text" placeholder="Username" />
-        <input type="password" placeholder="Password" />
-        <button type="submit">Submit</button>
-      </form>
+      <ThemedView style={{ display: "flex", flexDirection: "column", gap: 10 }}>
+        <Controller
+          control={control}
+          name="username"
+          render={({ field: { onChange, value } }) => (
+            <TextInput
+              placeholder="Username"
+              placeholderTextColor={"white"}
+              value={value}
+              onChangeText={onChange}
+              style={styles.input}
+            />
+          )}
+        />
+        <Controller
+          control={control}
+          name="password"
+          render={({ field: { onChange, value } }) => (
+            <TextInput
+              placeholder="Password"
+              placeholderTextColor={"white"}
+              value={value}
+              onChangeText={onChange}
+              secureTextEntry
+              style={styles.input}
+            />
+          )}
+        />
+        <Pressable onPress={handleSubmit(onSubmit)} style={styles.button}>
+          <ThemedText>Submit</ThemedText>
+        </Pressable>
+      </ThemedView>
       {/*
       <ThemedView style={styles.titleContainer}>
         <ThemedText type="title">Welcome!</ThemedText>
@@ -109,5 +143,19 @@ const styles = StyleSheet.create({
     bottom: 0,
     left: 0,
     position: "absolute",
+  },
+  input: {
+    color: "#ffffff",
+    borderWidth: 1,
+    borderColor: "#ccc",
+    padding: 10,
+    borderRadius: 5,
+    marginBottom: 10,
+  },
+  button: {
+    backgroundColor: "#007bff",
+    padding: 10,
+    borderRadius: 5,
+    alignItems: "center",
   },
 });
