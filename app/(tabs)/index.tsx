@@ -1,5 +1,6 @@
 import { Image } from "expo-image";
 import { Pressable, StyleSheet, TextInput } from "react-native";
+import { Link } from "expo-router";
 
 import ParallaxScrollView from "@/components/parallax-scroll-view";
 import { ThemedText } from "@/components/themed-text";
@@ -52,9 +53,14 @@ export default function HomeScreen() {
             />
           )}
         />
-        <Pressable onPress={handleSubmit(onSubmit)} style={styles.button}>
-          <ThemedText>Submit</ThemedText>
-        </Pressable>
+        <Link href="/user_home" asChild>
+          <Pressable
+            onPress={() => alert("Submit pressed")}
+            style={styles.button}
+          >
+            <ThemedText>Submit</ThemedText>
+          </Pressable>
+        </Link>
       </ThemedView>
       {/*
       <ThemedView style={styles.titleContainer}>
