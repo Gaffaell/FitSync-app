@@ -13,7 +13,7 @@ export default function UserScreen() {
         dismissTo
         style={styles.link}
       >
-        <ThemedText type="link">Lista de exercicios da semana</ThemedText>
+        <ThemedText type="title" style={{ color: 'purple' }}>Lista de exercicios da semana</ThemedText>
       </Link>
       <Link href="/user_home" dismissTo style={styles.link}>
         <ThemedText type="link">HOME</ThemedText>
