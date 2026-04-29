@@ -22,15 +22,39 @@ export default function ExerciciosSemana() {
         <ThemedText type="title" style={{ color: "blue" }}>
           Segunda-feira
         </ThemedText>
+      </Link>
+      <Link
+        href="/user_screens/exercicios_do_dia"
+        dismissTo
+        style={styles.link}
+      >
         <ThemedText type="title" style={{ color: "green" }}>
           Terça-feira
         </ThemedText>
+      </Link>
+      <Link
+        href="/user_screens/exercicios_do_dia"
+        dismissTo
+        style={styles.link}
+      >
         <ThemedText type="title" style={{ color: "yellow" }}>
           Quarta-feira
         </ThemedText>
+      </Link>
+      <Link
+        href="/user_screens/exercicios_do_dia"
+        dismissTo
+        style={styles.link}
+      >
         <ThemedText type="title" style={{ color: "red" }}>
           Quinta-feira
         </ThemedText>
+      </Link>
+      <Link
+        href="/user_screens/exercicios_do_dia"
+        dismissTo
+        style={styles.link}
+      >
         <ThemedText type="title" style={{ color: "purple" }}>
           Sexta-feira
         </ThemedText>

@@ -53,12 +53,20 @@ export default function HomeScreen() {
             />
           )}
         />
+        <Link href="/adm_home" asChild>
+          <Pressable
+            onPress={() => alert("Submit pressed")}
+            style={styles.button}
+          >
+            <ThemedText>Tela de adm</ThemedText>
+          </Pressable>
+        </Link>
         <Link href="/user_home" asChild>
           <Pressable
             onPress={() => alert("Submit pressed")}
             style={styles.button}
           >
-            <ThemedText>Submit</ThemedText>
+            <ThemedText>Tela de usuário</ThemedText>
           </Pressable>
         </Link>
       </ThemedView>
