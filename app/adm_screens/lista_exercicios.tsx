@@ -1,7 +1,7 @@
 import { ThemedText } from "@/components/themed-text";
 import { Link } from "expo-router";
 import { ThemedView } from "@/components/themed-view";
-import { FlatList, StatusBar, StyleSheet } from "react-native";
+import { FlatList, ScrollView, StatusBar, StyleSheet } from "react-native";
 
 export default function ListaExercicios() {
   {/* DATA terá os dados de exercicios do banco de dados*/ }
@@ -36,16 +36,18 @@ export default function ListaExercicios() {
     </ThemedView>
   )
   return (
-    <ThemedView>
-      <FlatList
-        data={DATA}
-        renderItem={({ item }) => <Item title={item.title} />}
-        keyExtractor={item => item.id}
-      />
-      <Link href="/adm_home" dismissTo style={styles.link}>
-        <ThemedText type="link">HOME</ThemedText>
-      </Link>
-    </ThemedView>
+    <ScrollView>
+      <ThemedView>
+        <FlatList
+          data={DATA}
+          renderItem={({ item }) => <Item title={item.title} />}
+          keyExtractor={item => item.id}
+        />
+        <Link href="/adm_home" dismissTo style={styles.link}>
+          <ThemedText type="link">HOME</ThemedText>
+        </Link>
+      </ThemedView>
+    </ScrollView>
   )
 }
 
