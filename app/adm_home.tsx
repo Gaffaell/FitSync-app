@@ -20,7 +20,7 @@ export default function AdmScreen() {
         dismissTo
         style={styles.link}
       >
-        <ThemedText type="link" style={{ color: "blue" }}>Lista de exercicios da semana</ThemedText>
+        <ThemedText type="link" style={{ color: "#007bff" }}>Lista de exercicios da semana</ThemedText>
       </Link>
       <Link
         href="/adm_screens/lista_alunos"
