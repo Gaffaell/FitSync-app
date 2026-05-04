@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from "react";
 import { View, Text, FlatList, StyleSheet, TouchableOpacity } from "react-native";
 import { useNavigation } from "@react-navigation/native";
+import { Link } from "expo-router";
+import { ThemedText } from "@/components/themed-text";
 
 // Firebase
 import { initializeApp } from "firebase/app";
@@ -56,6 +58,9 @@ export default function ListaAlunos() {
           </TouchableOpacity>
         )}
       />
+      <Link href="/adm_home" dismissTo style={styles.link}>
+        <ThemedText type="link">HOME</ThemedText>
+      </Link>
     </View>
   );
 }
@@ -65,5 +70,6 @@ const styles = StyleSheet.create({
   title: { fontSize: 22, fontWeight: "bold", color: "#a020f0", marginBottom: 20 },
   card: { backgroundColor: "#222", padding: 15, borderRadius: 5, marginBottom: 10 },
   nome: { color: "#fff", fontWeight: "bold", fontSize: 18 },
-  email: { color: "#ccc" }
+  email: { color: "#ccc" },
+  link: { marginTop: 15, paddingVertical: 15, textAlign: 'center' },
 });

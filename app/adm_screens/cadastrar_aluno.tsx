@@ -1,5 +1,7 @@
 import React, { useState } from "react";
 import { Text, TextInput, TouchableOpacity, StyleSheet, ScrollView } from "react-native";
+import { Link } from "expo-router";
+import { ThemedText } from "@/components/themed-text";
 
 // Firebase
 import { initializeApp } from "firebase/app";
@@ -93,9 +95,14 @@ export default function CadastroAluno() {
       <Text style={styles.label}>SENHA</Text>
       <TextInput style={styles.input} value={formData.senha} onChangeText={(t) => handleChange("senha", t)} secureTextEntry />
 
-      <TouchableOpacity style={styles.button} onPress={handleSubmit}>
-        <Text style={styles.buttonText}>Cadastrar</Text>
-      </TouchableOpacity>
+      <Link href="/adm_home" dismissTo style={styles.button}>
+        <TouchableOpacity onPress={handleSubmit}>
+          <Text style={styles.buttonText}>Cadastrar</Text>
+        </TouchableOpacity>
+      </Link>
+      <Link href="/adm_home" dismissTo style={styles.link}>
+        <ThemedText type="link">HOME</ThemedText>
+      </Link>
     </ScrollView>
   );
 }
@@ -105,6 +112,7 @@ const styles = StyleSheet.create({
   title: { fontSize: 22, fontWeight: "bold", color: "#a020f0", textAlign: "center", marginBottom: 20 },
   label: { color: "#fff", marginTop: 10, marginBottom: 5 },
   input: { backgroundColor: "#222", color: "#fff", padding: 10, borderRadius: 5, marginBottom: 10 },
-  button: { backgroundColor: "#a020f0", padding: 15, borderRadius: 5, marginTop: 20 },
-  buttonText: { color: "#fff", textAlign: "center", fontWeight: "bold" }
+  button: { backgroundColor: "#a020f0", padding: 15, textAlign: "center", borderRadius: 5, marginTop: 20 },
+  buttonText: { color: "#fff", textAlign: "center", fontWeight: "bold" },
+  link: { marginTop: 15, paddingVertical: 15, textAlign: 'center' },
 });
