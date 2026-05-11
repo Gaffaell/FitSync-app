@@ -55,7 +55,7 @@ export default function AdmScreen() {
           darkColor="#7dd3fc"
           style={styles.cardText}
         >
-          Lista de exercícios da semana
+          Lista de exercícios
         </ThemedText>
       </Link>
 
