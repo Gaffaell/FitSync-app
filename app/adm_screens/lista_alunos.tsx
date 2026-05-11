@@ -1,12 +1,18 @@
-import React, { useEffect, useState } from "react";
-import { View, Text, FlatList, StyleSheet, TouchableOpacity } from "react-native";
+import { ThemedText } from "@/components/themed-text";
+import { ThemedView } from "@/components/themed-view";
 import { useNavigation } from "@react-navigation/native";
 import { Link } from "expo-router";
-import { ThemedText } from "@/components/themed-text";
+import React, { useEffect, useState } from "react";
+import {
+  FlatList,
+  StyleSheet,
+  TouchableOpacity,
+  useColorScheme,
+} from "react-native";
 
 // Firebase
 import { initializeApp } from "firebase/app";
-import { getFirestore, collection, getDocs } from "firebase/firestore";
+import { collection, getDocs, getFirestore } from "firebase/firestore";
 
 const firebaseConfig = {
   apiKey: "AIzaSyAiRZdjS62ZR3vjBIg4RJ5v0YyxxCWytkk",
@@ -15,7 +21,7 @@ const firebaseConfig = {
   storageBucket: "academia-projeto-f6edb.appspot.com",
   messagingSenderId: "683804245498",
   appId: "1:683804245498:web:f9fd6dfdfbfbc720757843",
-  measurementId: "G-0CLP55GERT"
+  measurementId: "G-0CLP55GERT",
 };
 
 const app = initializeApp(firebaseConfig);
@@ -42,34 +48,97 @@ export default function ListaAlunos() {
     fetchAlunos();
   }, []);
 
+  const theme = useColorScheme();
+  const containerBackground = theme === "dark" ? "#071014" : "#edf6ff";
+  const itemBackground = theme === "dark" ? "#111827" : "#ffffff";
+  const itemShadow = theme === "dark" ? "#000" : "#0a7ea4";
+  const titleColor = theme === "dark" ? "#f8fafc" : "#0f4c81";
+  const subtitleColor = theme === "dark" ? "#94a3b8" : "#4b6570";
+  const linkCardStyle = {
+    ...styles.card,
+    backgroundColor: itemBackground,
+    shadowColor: itemShadow,
+  };
+  const itemStyle = {
+    ...styles.item,
+    backgroundColor: itemBackground,
+    shadowColor: itemShadow,
+  };
+
   return (
-    <View style={styles.container}>
-      <Text style={styles.title}>Lista de Alunos</Text>
+    <ThemedView
+      style={[styles.container, { backgroundColor: containerBackground }]}
+    >
+      <ThemedText type="title" style={[styles.title, { color: titleColor }]}>
+        Lista de Alunos
+      </ThemedText>
+      <ThemedText
+        type="subtitle"
+        style={[styles.subtitle, { color: subtitleColor }]}
+      >
+        Visualize e selecione um aluno para ver detalhes.
+      </ThemedText>
+
       <FlatList
         data={alunos}
         keyExtractor={(item) => item.id}
+        contentContainerStyle={styles.list}
         renderItem={({ item }) => (
           <TouchableOpacity
-            style={styles.card}
-            onPress={() => navigation.navigate("InformacoesAluno", { aluno: item })}
+            style={itemStyle}
+            onPress={() =>
+              navigation.navigate("InformacoesAluno", { aluno: item })
+            }
           >
-            <Text style={styles.nome}>{item.nome}</Text>
-            <Text style={styles.email}>{item.email}</Text>
+            <ThemedText type="defaultSemiBold" style={styles.nome}>
+              {item.nome}
+            </ThemedText>
+            <ThemedText style={styles.email}>{item.email}</ThemedText>
           </TouchableOpacity>
         )}
       />
-      <Link href="/adm_home" dismissTo style={styles.link}>
-        <ThemedText type="link">HOME</ThemedText>
+
+      <Link href="/adm_home" dismissTo style={linkCardStyle}>
+        <ThemedText
+          type="defaultSemiBold"
+          lightColor="#6b42c1"
+          darkColor="#c4b5fd"
+          style={styles.cardText}
+        >
+          Voltar para Home
+        </ThemedText>
       </Link>
-    </View>
+    </ThemedView>
   );
 }
 
 const styles = StyleSheet.create({
-  container: { flex: 1, backgroundColor: "#000", padding: 20 },
-  title: { fontSize: 22, fontWeight: "bold", color: "#a020f0", marginBottom: 20 },
-  card: { backgroundColor: "#222", padding: 15, borderRadius: 5, marginBottom: 10 },
-  nome: { color: "#fff", fontWeight: "bold", fontSize: 18 },
-  email: { color: "#ccc" },
-  link: { marginTop: 15, paddingVertical: 15, textAlign: 'center' },
+  container: {
+    flex: 1,
+    padding: 24,
+    alignItems: "center",
+    justifyContent: "flex-start",
+  },
+  title: { marginTop: 56, marginBottom: 6, textAlign: "center" },
+  subtitle: {
+    marginBottom: 24,
+    lineHeight: 22,
+    maxWidth: 360,
+    textAlign: "center",
+  },
+  list: { width: "100%", paddingBottom: 20 },
+  item: {
+    width: "100%",
+    maxWidth: 520,
+    borderRadius: 20,
+    padding: 18,
+    marginBottom: 14,
+    shadowOffset: { width: 0, height: 10 },
+    shadowOpacity: 0.16,
+    shadowRadius: 18,
+    elevation: 5,
+  },
+  nome: { fontSize: 18, fontWeight: "700", marginBottom: 4 },
+  email: { fontSize: 14, color: "#94a3b8" },
+  cardText: { fontSize: 16, textAlign: "center" },
 });
