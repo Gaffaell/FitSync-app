@@ -181,8 +181,10 @@ export default function CadastroAluno() {
             </ThemedText>
           </Pressable>
         </Link>
-        <Link href="/adm_home" dismissTo style={styles.link}>
-          <ThemedText type="link">Voltar para Home</ThemedText>
+        <Link href="/adm_home" dismissTo>
+          <ThemedText type="link" style={styles.link}>
+            Voltar para Home
+          </ThemedText>
         </Link>
       </ThemedView>
     </ScrollView>
@@ -241,7 +243,7 @@ const styles = StyleSheet.create({
     marginBottom: 12,
   },
   primaryButton: {
-    backgroundColor: "#0a7ea4",
+    backgroundColor: "#6b42c1",
   },
   buttonText: {
     color: "#ffffff",
@@ -251,5 +253,8 @@ const styles = StyleSheet.create({
   link: {
     marginTop: 12,
     paddingVertical: 12,
+    fontSize: 16,
+    textAlign: "center",
+    color: "#6b42c1",
   },
 });
