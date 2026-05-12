@@ -54,11 +54,6 @@ export default function ListaAlunos() {
   const itemShadow = theme === "dark" ? "#000" : "#0a7ea4";
   const titleColor = theme === "dark" ? "#f8fafc" : "#0f4c81";
   const subtitleColor = theme === "dark" ? "#94a3b8" : "#4b6570";
-  const linkCardStyle = {
-    ...styles.card,
-    backgroundColor: itemBackground,
-    shadowColor: itemShadow,
-  };
   const itemStyle = {
     ...styles.item,
     backgroundColor: itemBackground,
@@ -98,13 +93,8 @@ export default function ListaAlunos() {
         )}
       />
 
-      <Link href="/adm_home" dismissTo style={linkCardStyle}>
-        <ThemedText
-          type="defaultSemiBold"
-          lightColor="#6b42c1"
-          darkColor="#c4b5fd"
-          style={styles.cardText}
-        >
+      <Link href="/adm_home" dismissTo>
+        <ThemedText type="defaultSemiBold" style={styles.cardText}>
           Voltar para Home
         </ThemedText>
       </Link>

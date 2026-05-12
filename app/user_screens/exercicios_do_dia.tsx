@@ -15,9 +15,6 @@ export default function ExerciciosDia() {
       <Link href="/user_home" dismissTo style={styles.link}>
         <ThemedText type="link">HOME</ThemedText>
       </Link>
-      <Link href="/user_screens/exercicios_da_semana" dismissTo style={styles.link}>
-        <ThemedText type="link">Voltar</ThemedText>
-      </Link>
     </ThemedView>
   );
 }

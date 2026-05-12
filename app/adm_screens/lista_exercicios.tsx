@@ -34,12 +34,6 @@ export default function ListaExercicios() {
     </ThemedView>
   );
 
-  const linkCardStyle = {
-    ...styles.cardLink,
-    backgroundColor: cardBg,
-    shadowColor: cardShadow,
-  };
-
   return (
     <ScrollView>
       <ThemedView style={[styles.container, { backgroundColor: containerBg }]}>
@@ -63,13 +57,8 @@ export default function ListaExercicios() {
           contentContainerStyle={styles.list}
         />
 
-        <Link href="/adm_home" dismissTo style={linkCardStyle}>
-          <ThemedText
-            type="defaultSemiBold"
-            lightColor="#6b42c1"
-            darkColor="#c4b5fd"
-            style={styles.cardText}
-          >
+        <Link href="/adm_home" dismissTo>
+          <ThemedText type="defaultSemiBold" style={styles.cardText}>
             Voltar para Home
           </ThemedText>
         </Link>
