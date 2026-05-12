@@ -1,7 +1,7 @@
 import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
 import { useNavigation } from "@react-navigation/native";
-import { Link } from "expo-router";
+import { Link, router } from "expo-router";
 import React, { useEffect, useState } from "react";
 import {
   FlatList,
@@ -12,6 +12,7 @@ import {
 
 // Firebase
 import { initializeApp } from "firebase/app";
+import { getAuth } from "firebase/auth";
 import { collection, getDocs, getFirestore } from "firebase/firestore";
 
 const firebaseConfig = {
@@ -26,6 +27,7 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
+const auth = getAuth(app);
 
 export default function ListaAlunos() {
   const [alunos, setAlunos] = useState<any[]>([]);
@@ -81,9 +83,8 @@ export default function ListaAlunos() {
         renderItem={({ item }) => (
           <TouchableOpacity
             style={itemStyle}
-            onPress={() =>
-              navigation.navigate("InformacoesAluno", { aluno: item })
-            }
+            key={item.id}
+            onPress={() => router.push(`/adm_screens/details/${item.id}`)}
           >
             <ThemedText type="defaultSemiBold" style={styles.nome}>
               {item.nome}
