@@ -1,12 +1,7 @@
 import { Link, router, useLocalSearchParams } from "expo-router";
-import { deleteDoc, doc, getDoc } from "firebase/firestore";
+import { doc, getDoc, updateDoc } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
-import {
-  Pressable,
-  ScrollView,
-  StyleSheet,
-  TouchableOpacity,
-} from "react-native";
+import { ScrollView, StyleSheet, TouchableOpacity } from "react-native";
 
 import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
@@ -48,12 +43,24 @@ export default function InformacoesAluno() {
     return <ThemedText>Loading...</ThemedText>;
   }
 
-  async function deleteUser(id: any) {
+  async function updateUser(id: any) {
     try {
       if (typeof id !== "string") return;
-      await deleteDoc(doc(db, "aluno", id));
-      alert("Aluno excluído com sucesso!");
-      router.push("/adm_screens/lista_alunos");
+      const userRef = doc(db, "aluno", id);
+      console.log(user);
+      console.log(typeof user.nome);
+      await updateDoc(userRef, {
+        nome: user.nome,
+        idade: user.idade,
+        email: user.email,
+        senha: user.senha,
+        altura: user.altura,
+        peso: user.peso,
+        sexo: user.sexo,
+        telefone: user.telefone,
+      });
+      alert("Aluno atualizado com sucesso!");
+      router.push(`/adm_screens/details/${id}`);
     } catch (error) {
       console.log(error);
     }
@@ -63,31 +70,69 @@ export default function InformacoesAluno() {
     <ScrollView>
       <ThemedView style={styles.container}>
         <ThemedText type="title" style={styles.titleContainer}>
-          Informações de aluno
+          Editar informações de aluno
         </ThemedText>
 
-        <ThemedText>Nome: {user.nome}</ThemedText>
-        <ThemedText>Idade: {user.idade}</ThemedText>
-        <ThemedText>Email: {user.email}</ThemedText>
-        <ThemedText>Senha: {user.senha}</ThemedText>
-        <ThemedText>Altura: {user.altura}</ThemedText>
-        <ThemedText>Peso: {user.peso}</ThemedText>
-        <ThemedText>Sexo: {user.sexo}</ThemedText>
-        <ThemedText>Telefone: {user.telefone}</ThemedText>
+        <ThemedText>Nome: </ThemedText>
+        <input
+          type="text"
+          placeholder="Novo nome"
+          value={user.nome}
+          onChange={(e) => setUser({ ...user, nome: e.target.value })}
+        />
+        <ThemedText>Idade: </ThemedText>
+        <input
+          type="text"
+          placeholder="Nova idade"
+          value={user.idade}
+          onChange={(e) => setUser({ ...user, idade: e.target.value })}
+        />
+        <ThemedText>Email: </ThemedText>
+        <input
+          type="text"
+          placeholder="Novo email"
+          value={user.email}
+          onChange={(e) => setUser({ ...user, email: e.target.value })}
+        />
+        <ThemedText>Senha: </ThemedText>
+        <input
+          type="text"
+          placeholder="Nova senha"
+          value={user.senha}
+          onChange={(e) => setUser({ ...user, senha: e.target.value })}
+        />
+        <ThemedText>Altura: </ThemedText>
+        <input
+          type="text"
+          placeholder="Nova altura"
+          value={user.altura}
+          onChange={(e) => setUser({ ...user, altura: e.target.value })}
+        />
+        <ThemedText>Peso: </ThemedText>
+        <input
+          type="text"
+          placeholder="Novo peso"
+          value={user.peso}
+          onChange={(e) => setUser({ ...user, peso: e.target.value })}
+        />
+        <ThemedText>Sexo: </ThemedText>
+        <input
+          type="text"
+          placeholder="Novo sexo"
+          value={user.sexo}
+          onChange={(e) => setUser({ ...user, sexo: e.target.value })}
+        />
+        <ThemedText>Telefone: </ThemedText>
+        <input
+          type="text"
+          placeholder="Novo telefone"
+          value={user.telefone}
+          onChange={(e) => setUser({ ...user, telefone: e.target.value })}
+        />
 
-        <TouchableOpacity
-          onPress={() => router.push(`/adm_screens/editar_informacoes/${id}`)}
-        >
-          <ThemedText style={styles.button}>Editar informações</ThemedText>
+        <TouchableOpacity onPress={() => updateUser(id)}>
+          <ThemedText style={styles.button}>Salvar informações</ThemedText>
         </TouchableOpacity>
-        <Link href="/adm_screens/definir_treino" asChild>
-          <Pressable style={styles.button_3}>
-            <ThemedText>Definir treino</ThemedText>
-          </Pressable>
-        </Link>
-        <Pressable onPress={() => deleteUser(id)} style={styles.button_2}>
-          <ThemedText style={{ color: "black" }}>Excluir aluno</ThemedText>
-        </Pressable>
         <Link href="/adm_home" dismissTo style={styles.link}>
           <ThemedText type="link">HOME</ThemedText>
         </Link>

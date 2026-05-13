@@ -44,6 +44,32 @@ export default function AdmScreen() {
         </ThemedText>
       </Link>
 
+      <Link href="/adm_screens/lista_alunos" dismissTo style={linkCardStyle}>
+        <ThemedText
+          type="defaultSemiBold"
+          lightColor="#6b42c1"
+          darkColor="#c4b5fd"
+          style={styles.cardText}
+        >
+          Lista de alunos
+        </ThemedText>
+      </Link>
+
+      <Link
+        href="/adm_screens/cadastrar_exercicio"
+        dismissTo
+        style={linkCardStyle}
+      >
+        <ThemedText
+          type="defaultSemiBold"
+          lightColor="#d9730a"
+          darkColor="#fdba74"
+          style={styles.cardText}
+        >
+          Cadastrar exercício
+        </ThemedText>
+      </Link>
+
       <Link
         href="/adm_screens/lista_exercicios"
         dismissTo
@@ -56,17 +82,6 @@ export default function AdmScreen() {
           style={styles.cardText}
         >
           Lista de exercícios
-        </ThemedText>
-      </Link>
-
-      <Link href="/adm_screens/lista_alunos" dismissTo style={linkCardStyle}>
-        <ThemedText
-          type="defaultSemiBold"
-          lightColor="#6b42c1"
-          darkColor="#c4b5fd"
-          style={styles.cardText}
-        >
-          Lista de alunos
         </ThemedText>
       </Link>
 

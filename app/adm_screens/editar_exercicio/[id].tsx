@@ -1,5 +1,5 @@
 import { Link, router, useLocalSearchParams } from "expo-router";
-import { deleteDoc, doc, getDoc } from "firebase/firestore";
+import { deleteDoc, doc, getDoc, updateDoc } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
 import {
   Pressable,
@@ -13,7 +13,7 @@ import { ThemedView } from "@/components/themed-view";
 import { initializeApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
 
-export default function InformacoesAluno() {
+export default function InformacoesExercicio() {
   const firebaseConfig = {
     apiKey: "AIzaSyAiRZdjS62ZR3vjBIg4RJ5v0YyxxCWytkk",
     authDomain: "academia-projeto-f6edb.firebaseapp.com",
@@ -29,31 +29,46 @@ export default function InformacoesAluno() {
 
   const { id } = useLocalSearchParams();
 
-  const [user, setUser] = useState<any>(null);
+  const [exercicio, setExercicio] = useState<any>(null);
 
   useEffect(() => {
-    async function fetchUser() {
+    async function fetchExercicio() {
       if (typeof id !== "string") return;
-      const docRef = doc(db, "aluno", id);
+      const docRef = doc(db, "exercicios", id);
       const docSnap = await getDoc(docRef);
       if (docSnap.exists()) {
-        setUser(docSnap.data());
+        setExercicio(docSnap.data());
       }
     }
 
-    fetchUser();
+    fetchExercicio();
   }, [id]);
 
-  if (!user) {
+  if (!exercicio) {
     return <ThemedText>Loading...</ThemedText>;
   }
 
-  async function deleteUser(id: any) {
+  async function updateExercicio(id: any) {
     try {
       if (typeof id !== "string") return;
-      await deleteDoc(doc(db, "aluno", id));
-      alert("Aluno excluído com sucesso!");
-      router.push("/adm_screens/lista_alunos");
+      const exercicioRef = doc(db, "exercicios", id);
+      await updateDoc(exercicioRef, {
+        nome: exercicio.nome,
+        descricao: exercicio.descricao,
+      });
+      alert("Exercício atualizado com sucesso!");
+      router.push(`/adm_screens/lista_exercicios`);
+    } catch (error) {
+      console.log(error);
+    }
+  }
+
+  async function deleteExercicio(id: any) {
+    try {
+      if (typeof id !== "string") return;
+      await deleteDoc(doc(db, "exercicios", id));
+      alert("Exercício excluído com sucesso!");
+      router.push("/adm_screens/lista_exercicios");
     } catch (error) {
       console.log(error);
     }
@@ -63,31 +78,34 @@ export default function InformacoesAluno() {
     <ScrollView>
       <ThemedView style={styles.container}>
         <ThemedText type="title" style={styles.titleContainer}>
-          Informações de aluno
+          Editar informações de exercício
         </ThemedText>
 
-        <ThemedText>Nome: {user.nome}</ThemedText>
-        <ThemedText>Idade: {user.idade}</ThemedText>
-        <ThemedText>Email: {user.email}</ThemedText>
-        <ThemedText>Senha: {user.senha}</ThemedText>
-        <ThemedText>Altura: {user.altura}</ThemedText>
-        <ThemedText>Peso: {user.peso}</ThemedText>
-        <ThemedText>Sexo: {user.sexo}</ThemedText>
-        <ThemedText>Telefone: {user.telefone}</ThemedText>
+        <ThemedText>Nome: </ThemedText>
+        <input
+          type="text"
+          placeholder="Novo nome"
+          value={exercicio.nome}
+          onChange={(e) => setExercicio({ ...exercicio, nome: e.target.value })}
+        />
+        <ThemedText>Descrição: </ThemedText>
+        <input
+          type="text"
+          placeholder="Nova descrição"
+          value={exercicio.descricao}
+          onChange={(e) =>
+            setExercicio({ ...exercicio, descricao: e.target.value })
+          }
+        />
 
-        <TouchableOpacity
-          onPress={() => router.push(`/adm_screens/editar_informacoes/${id}`)}
-        >
-          <ThemedText style={styles.button}>Editar informações</ThemedText>
+        <TouchableOpacity onPress={() => updateExercicio(id)}>
+          <ThemedText style={styles.button}>Salvar informações</ThemedText>
         </TouchableOpacity>
-        <Link href="/adm_screens/definir_treino" asChild>
-          <Pressable style={styles.button_3}>
-            <ThemedText>Definir treino</ThemedText>
-          </Pressable>
-        </Link>
-        <Pressable onPress={() => deleteUser(id)} style={styles.button_2}>
-          <ThemedText style={{ color: "black" }}>Excluir aluno</ThemedText>
+
+        <Pressable onPress={() => deleteExercicio(id)} style={styles.button_2}>
+          <ThemedText style={{ color: "black" }}>Excluir exercício</ThemedText>
         </Pressable>
+
         <Link href="/adm_home" dismissTo style={styles.link}>
           <ThemedText type="link">HOME</ThemedText>
         </Link>

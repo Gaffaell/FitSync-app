@@ -1,38 +1,55 @@
 import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
-import { Link } from "expo-router";
-import { FlatList, ScrollView, StyleSheet, useColorScheme } from "react-native";
+import { Link, router } from "expo-router";
+import { initializeApp } from "firebase/app";
+import { collection, getDocs, getFirestore } from "firebase/firestore";
+import React, { useEffect, useState } from "react";
+import {
+  FlatList,
+  ScrollView,
+  StyleSheet,
+  TouchableOpacity,
+  useColorScheme,
+} from "react-native";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyAiRZdjS62ZR3vjBIg4RJ5v0YyxxCWytkk",
+  authDomain: "academia-projeto-f6edb.firebaseapp.com",
+  projectId: "academia-projeto-f6edb",
+  storageBucket: "academia-projeto-f6edb.appspot.com",
+  messagingSenderId: "683804245498",
+  appId: "1:683804245498:web:f9fd6dfdfbfbc720757843",
+  measurementId: "G-0CLP55GERT",
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
 
 export default function ListaExercicios() {
+  const [exercicios, setExercicios] = useState<any[]>([]);
+
+  const fetchExercicios = async () => {
+    try {
+      const querySnapshot = await getDocs(collection(db, "exercicios"));
+      const lista: any[] = [];
+      querySnapshot.forEach((doc) => {
+        lista.push({ id: doc.id, ...doc.data() });
+      });
+      setExercicios(lista);
+    } catch (error) {
+      console.error("Erro ao buscar exercícios:", error);
+    }
+  };
+
+  useEffect(() => {
+    fetchExercicios();
+  }, []);
   const theme = useColorScheme();
   const containerBg = theme === "dark" ? "#071014" : "#edf6ff";
   const cardBg = theme === "dark" ? "#111827" : "#ffffff";
   const cardShadow = theme === "dark" ? "#000" : "#0a7ea4";
   const titleColor = theme === "dark" ? "#f8fafc" : "#0f4c81";
   const subtitleColor = theme === "dark" ? "#94a3b8" : "#4b6570";
-
-  const DATA = [
-    { id: "ksadief", title: "Exercício 1" },
-    { id: "ksaadfksjdief", title: "Exercício 2" },
-    { id: "ksadief12weefds", title: "Exercício 3" },
-    { id: "ksadief235r3sdfasd", title: "Exercício 4" },
-    { id: "ksadiefergkdvjfk", title: "Exercício 5" },
-  ];
-
-  type ItemProps = { title: string };
-
-  const Item = ({ title }: ItemProps) => (
-    <ThemedView
-      style={[
-        styles.item,
-        { backgroundColor: cardBg, shadowColor: cardShadow },
-      ]}
-    >
-      <ThemedText type="defaultSemiBold" style={styles.title}>
-        {title}
-      </ThemedText>
-    </ThemedView>
-  );
 
   return (
     <ScrollView>
@@ -51,10 +68,23 @@ export default function ListaExercicios() {
         </ThemedText>
 
         <FlatList
-          data={DATA}
-          renderItem={({ item }) => <Item title={item.title} />}
+          data={exercicios}
           keyExtractor={(item) => item.id}
           contentContainerStyle={styles.list}
+          renderItem={({ item }) => (
+            <TouchableOpacity
+              style={styles.item}
+              key={item.id}
+              onPress={() =>
+                router.push(`/adm_screens/editar_exercicio/${item.id}`)
+              }
+            >
+              <ThemedText type="defaultSemiBold" style={styles.title}>
+                {item.nome}
+              </ThemedText>
+              <ThemedText style={styles.cardText}>{item.descricao}</ThemedText>
+            </TouchableOpacity>
+          )}
         />
 
         <Link href="/adm_home" dismissTo>
@@ -100,6 +130,7 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.16,
     shadowRadius: 18,
     elevation: 5,
+    backgroundColor: "#2c1849",
   },
   title: {
     fontSize: 18,
@@ -120,5 +151,20 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.16,
     shadowRadius: 18,
     elevation: 5,
+  },
+  input: {
+    width: "100%",
+    borderRadius: 16,
+    paddingHorizontal: 16,
+    paddingVertical: 14,
+    marginBottom: 16,
+    fontSize: 16,
+  },
+  button: {
+    backgroundColor: "#007bff",
+    marginBottom: 10,
+    padding: 10,
+    borderRadius: 5,
+    alignItems: "center",
   },
 });

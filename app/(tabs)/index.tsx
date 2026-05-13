@@ -1,19 +1,14 @@
 import { Image } from "expo-image";
-import { Pressable, StyleSheet, TextInput } from "react-native";
 import { Link } from "expo-router";
+import { Pressable, StyleSheet, TextInput } from "react-native";
 
 import ParallaxScrollView from "@/components/parallax-scroll-view";
 import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
 import { Controller, useForm } from "react-hook-form";
-import verifyCredentials from "../handlingForm";
 
 export default function HomeScreen() {
   const { control, handleSubmit } = useForm();
-
-  const onSubmit = (data: any) => {
-    verifyCredentials(data);
-  };
 
   return (
     <ParallaxScrollView
@@ -54,16 +49,12 @@ export default function HomeScreen() {
           )}
         />
         <Link href="/adm_home" asChild>
-          <Pressable
-            style={styles.button}
-          >
+          <Pressable style={styles.button}>
             <ThemedText>Tela de adm</ThemedText>
           </Pressable>
         </Link>
         <Link href="/user_home" asChild>
-          <Pressable
-            style={styles.button}
-          >
+          <Pressable style={styles.button}>
             <ThemedText>Tela de usuário</ThemedText>
           </Pressable>
         </Link>

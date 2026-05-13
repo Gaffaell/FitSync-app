@@ -1,6 +1,6 @@
 import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
-import { Link } from "expo-router";
+import { Link, router } from "expo-router";
 import React, { useState } from "react";
 import {
   Pressable,
@@ -64,8 +64,8 @@ export default function CadastroAluno() {
         email: "",
         senha: "",
       });
+      router.push("/adm_home");
     } catch (error) {
-      console.error("Erro ao cadastrar aluno:", error);
       alert("Erro ao cadastrar aluno. Tente novamente.");
     }
   };
@@ -174,13 +174,11 @@ export default function CadastroAluno() {
           />
         </ThemedView>
 
-        <Link href="/adm_home" asChild>
-          <Pressable onPress={handleSubmit} style={primaryButtonStyle}>
-            <ThemedText type="defaultSemiBold" style={styles.buttonText}>
-              Cadastrar
-            </ThemedText>
-          </Pressable>
-        </Link>
+        <Pressable onPress={handleSubmit} style={primaryButtonStyle}>
+          <ThemedText type="defaultSemiBold" style={styles.buttonText}>
+            Cadastrar
+          </ThemedText>
+        </Pressable>
         <Link href="/adm_home" dismissTo>
           <ThemedText type="link" style={styles.link}>
             Voltar para Home
