@@ -1,6 +1,5 @@
 import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
-import { useNavigation } from "@react-navigation/native";
 import { Link, router } from "expo-router";
 import React, { useEffect, useState } from "react";
 import {
@@ -12,7 +11,6 @@ import {
 
 // Firebase
 import { initializeApp } from "firebase/app";
-import { getAuth } from "firebase/auth";
 import { collection, getDocs, getFirestore } from "firebase/firestore";
 
 const firebaseConfig = {
@@ -27,11 +25,9 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
-const auth = getAuth(app);
 
 export default function ListaAlunos() {
   const [alunos, setAlunos] = useState<any[]>([]);
-  const navigation = useNavigation();
 
   const fetchAlunos = async () => {
     try {
