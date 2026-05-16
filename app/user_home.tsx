@@ -1,8 +1,8 @@
-import { Link } from "expo-router";
-import { StyleSheet, useColorScheme } from "react-native";
+import { Pressable, StyleSheet, useColorScheme } from "react-native";
 
 import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
+import { router } from "expo-router";
 
 const weekDays = [
   { label: "Segunda-feira", color: "#0f4c81" },
@@ -11,6 +11,8 @@ const weekDays = [
   { label: "Quinta-feira", color: "#fb923c" },
   { label: "Sexta-feira", color: "#22c55e" },
 ];
+
+const user_id = "bPmuD51VXGWUMaPHesEo"; // Substitua pelo ID do usuário logado
 
 export default function ExerciciosSemana() {
   const colorScheme = useColorScheme();
@@ -37,10 +39,17 @@ export default function ExerciciosSemana() {
       </ThemedText>
 
       {weekDays.map((day) => (
-        <Link
+        <Pressable
+          onPress={() =>
+            router.push({
+              pathname: "/user_screens/dia_semana/[id]",
+              params: {
+                dia: day.label.toLocaleLowerCase(),
+                id: user_id,
+              },
+            })
+          }
           key={day.label}
-          href="/user_screens/exercicios_do_dia"
-          dismissTo
           style={[
             styles.card,
             { backgroundColor: cardBackground, shadowColor: cardShadow },
@@ -54,7 +63,7 @@ export default function ExerciciosSemana() {
           >
             {day.label}
           </ThemedText>
-        </Link>
+        </Pressable>
       ))}
     </ThemedView>
   );
