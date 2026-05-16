@@ -10,6 +10,8 @@ const weekDays = [
   { label: "Quarta-feira", color: "#8b5cf6" },
   { label: "Quinta-feira", color: "#fb923c" },
   { label: "Sexta-feira", color: "#22c55e" },
+  { label: "Sábado", color: "#22c55e" },
+  { label: "Domingo", color: "#22c55e" },
 ];
 
 const user_id = "bPmuD51VXGWUMaPHesEo"; // Substitua pelo ID do usuário logado
@@ -44,7 +46,10 @@ export default function ExerciciosSemana() {
             router.push({
               pathname: "/user_screens/dia_semana/[id]",
               params: {
-                dia: day.label.toLocaleLowerCase(),
+                dia: day.label
+                  .toLocaleLowerCase()
+                  .normalize("NFD")
+                  .replace(/[\u0300-\u036f]/g, ""),
                 id: user_id,
               },
             })
