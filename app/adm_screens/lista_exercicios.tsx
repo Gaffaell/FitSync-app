@@ -1,7 +1,14 @@
 import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
 import { Link } from "expo-router";
-import { FlatList, ScrollView, StyleSheet, useColorScheme } from "react-native";
+import React from "react";
+import {
+  FlatList,
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  useColorScheme,
+} from "react-native";
 
 export default function ListaExercicios() {
   const theme = useColorScheme();
@@ -10,28 +17,37 @@ export default function ListaExercicios() {
   const cardShadow = theme === "dark" ? "#000" : "#0a7ea4";
   const titleColor = theme === "dark" ? "#f8fafc" : "#0f4c81";
   const subtitleColor = theme === "dark" ? "#94a3b8" : "#4b6570";
+  const buttonBg = theme === "dark" ? "#1e293b" : "#e2e8f0";
+  const buttonTextColor = theme === "dark" ? "#f8fafc" : "#0f172a";
 
   const DATA = [
-    { id: "ksadief", title: "Exercício 1" },
-    { id: "ksaadfksjdief", title: "Exercício 2" },
-    { id: "ksadief12weefds", title: "Exercício 3" },
-    { id: "ksadief235r3sdfasd", title: "Exercício 4" },
-    { id: "ksadiefergkdvjfk", title: "Exercício 5" },
+    { id: "1", title: "Exercício 1" },
+    { id: "2", title: "Exercício 2" },
+    { id: "3", title: "Exercício 3" },
+    { id: "4", title: "Exercício 4" },
+    { id: "5", title: "Exercício 5" },
   ];
 
   type ItemProps = { title: string };
 
   const Item = ({ title }: ItemProps) => (
-    <ThemedView
-      style={[
+    <Pressable
+      style={({ pressed }) => [
         styles.item,
-        { backgroundColor: cardBg, shadowColor: cardShadow },
+        {
+          backgroundColor: pressed ? "#6b42c1" : cardBg,
+          shadowColor: cardShadow,
+        },
       ]}
+      onPress={() => console.log(`Abrir detalhes de ${title}`)}
     >
-      <ThemedText type="defaultSemiBold" style={styles.title}>
+      <ThemedText
+        type="defaultSemiBold"
+        style={[styles.title, { color: buttonTextColor }]}
+      >
         {title}
       </ThemedText>
-    </ThemedView>
+    </Pressable>
   );
 
   return (
@@ -58,9 +74,9 @@ export default function ListaExercicios() {
         />
 
         <Link href="/adm_home" dismissTo>
-          <ThemedText type="defaultSemiBold" style={styles.cardText}>
-            Voltar para Home
-          </ThemedText>
+          <Pressable style={[styles.button, { backgroundColor: "#6b42c1" }]}>
+            <ThemedText style={styles.buttonText}>Voltar para Home</ThemedText>
+          </Pressable>
         </Link>
       </ThemedView>
     </ScrollView>
@@ -79,22 +95,27 @@ const styles = StyleSheet.create({
     marginTop: 56,
     marginBottom: 8,
     textAlign: "center",
+    fontSize: 24,
+    fontWeight: "bold",
   },
   subtitle: {
     marginBottom: 24,
     lineHeight: 24,
     maxWidth: 360,
     textAlign: "center",
+    fontSize: 16,
   },
   list: {
     width: "100%",
     paddingBottom: 20,
+    alignItems: "center",
   },
   item: {
     width: "100%",
     maxWidth: 520,
     borderRadius: 20,
-    padding: 18,
+    paddingVertical: 18,
+    alignItems: "center",
     marginBottom: 14,
     shadowOffset: { width: 0, height: 10 },
     shadowOpacity: 0.16,
@@ -105,20 +126,17 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "700",
   },
-  cardText: {
-    fontSize: 16,
-    textAlign: "center",
-  },
-  cardLink: {
+  button: {
     width: "100%",
     maxWidth: 520,
-    borderRadius: 20,
-    paddingVertical: 18,
-    paddingHorizontal: 20,
-    marginTop: 12,
-    shadowOffset: { width: 0, height: 10 },
-    shadowOpacity: 0.16,
-    shadowRadius: 18,
-    elevation: 5,
+    borderRadius: 16,
+    paddingVertical: 16,
+    alignItems: "center",
+    marginTop: 20,
+  },
+  buttonText: {
+    color: "#fff",
+    fontSize: 16,
+    fontWeight: "700",
   },
 });
