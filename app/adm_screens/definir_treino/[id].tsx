@@ -1,8 +1,8 @@
-import { Pressable, StyleSheet, useColorScheme } from "react-native";
+import { router, useLocalSearchParams } from "expo-router";
+import { Pressable, StyleSheet } from "react-native";
 
 import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
-import { router } from "expo-router";
 
 const weekDays = [
   { label: "Segunda-feira", color: "#0f4c81" },
@@ -14,51 +14,34 @@ const weekDays = [
   { label: "Domingo", color: "#22c55e" },
 ];
 
-const user_id = "bPmuD51VXGWUMaPHesEo"; // Substitua pelo ID do usuário logado
-
-export default function ExerciciosSemana() {
-  const colorScheme = useColorScheme();
-  const cardBackground = colorScheme === "dark" ? "#111827" : "#ffffff";
-  const cardShadow = colorScheme === "dark" ? "#000" : "#0a7ea4";
+export default function DefinirTreino() {
+  const { id } = useLocalSearchParams();
 
   return (
-    <ThemedView
-      style={styles.container}
-      lightColor="#edf6ff"
-      darkColor="#071014"
-    >
-      <ThemedText type="title" style={styles.heading}>
-        Plano de treinos
-      </ThemedText>
-      <ThemedText
-        type="subtitle"
-        lightColor="#4b6570"
-        darkColor="#9ca3af"
-        style={styles.subtitle}
-      >
-        Escolha o dia da semana para ver os exercícios planejados e começar seu
-        treino com foco.
-      </ThemedText>
-
+    <ThemedView style={styles.container}>
+      <ThemedText type="title">Definir treino da semana</ThemedText>
+      {/* 
+      Aqui você pode adicionar a lista de exercícios de cada dia da semana,
+      busca em outro arquivo a lógica para exibir os exercícios de cada dia, ou seja,
+      criar um componente genérico que recebe os exercícios como props e renderiza a lista de exercícios de cada dia da semana.
+      pega as informaçoes do dia da semana que o usuario clicou no banco de dados
+      */}
       {weekDays.map((day) => (
         <Pressable
           onPress={() =>
             router.push({
-              pathname: "/user_screens/dia_semana/[id]",
+              pathname: "/adm_screens/definir_treino/definir_treino_dia/[id]",
               params: {
                 dia: day.label
                   .toLocaleLowerCase()
                   .normalize("NFD")
                   .replace(/[\u0300-\u036f]/g, ""),
-                id: user_id,
+                id: id.toString(),
               },
             })
           }
           key={day.label}
-          style={[
-            styles.card,
-            { backgroundColor: cardBackground, shadowColor: cardShadow },
-          ]}
+          style={[styles.card]}
         >
           <ThemedText
             type="defaultSemiBold"
@@ -70,6 +53,13 @@ export default function ExerciciosSemana() {
           </ThemedText>
         </Pressable>
       ))}
+
+      <Pressable style={styles.link}>
+        <ThemedText type="link">HOME</ThemedText>
+      </Pressable>
+      <Pressable style={styles.link}>
+        <ThemedText type="link">Voltar</ThemedText>
+      </Pressable>
     </ThemedView>
   );
 }
@@ -77,20 +67,13 @@ export default function ExerciciosSemana() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 24,
-    justifyContent: "flex-start",
     alignItems: "center",
+    justifyContent: "center",
+    padding: 20,
   },
-  heading: {
-    marginTop: 72,
-    marginBottom: 10,
-    textAlign: "center",
-  },
-  subtitle: {
-    textAlign: "center",
-    marginBottom: 32,
-    lineHeight: 24,
-    maxWidth: 360,
+  link: {
+    marginTop: 15,
+    paddingVertical: 15,
   },
   card: {
     width: "100%",
@@ -108,8 +91,5 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "700",
     color: "#ffffff",
-  },
-  homeCard: {
-    marginTop: 12,
   },
 });
