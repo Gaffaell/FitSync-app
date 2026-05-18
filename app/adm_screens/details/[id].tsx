@@ -80,11 +80,12 @@ export default function InformacoesAluno() {
         >
           <ThemedText style={styles.button}>Editar informações</ThemedText>
         </TouchableOpacity>
-        <Link href="/adm_screens/definir_treino" asChild>
-          <Pressable style={styles.button_3}>
-            <ThemedText>Definir treino</ThemedText>
-          </Pressable>
-        </Link>
+        <Pressable
+          style={styles.button_3}
+          onPress={() => router.push(`/adm_screens/definir_treino/${id}`)}
+        >
+          <ThemedText>Definir treino</ThemedText>
+        </Pressable>
         <Pressable onPress={() => deleteUser(id)} style={styles.button_2}>
           <ThemedText style={{ color: "black" }}>Excluir aluno</ThemedText>
         </Pressable>
