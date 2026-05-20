@@ -1,6 +1,6 @@
-import { Link, useLocalSearchParams } from "expo-router";
+import { Link, router, useLocalSearchParams } from "expo-router";
 import React, { useEffect, useState } from "react";
-import { FlatList, ScrollView, StyleSheet } from "react-native";
+import { FlatList, Pressable, ScrollView, StyleSheet } from "react-native";
 
 import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
@@ -110,6 +110,14 @@ export default function ExerciciosDia() {
             </ThemedView>
           )}
         />
+        <Pressable
+          style={styles.button_2}
+          onPress={() => router.push(`/user_screens/feedback/${id}`)}
+        >
+          <ThemedText style={{ color: "black" }}>
+            Mandar o feedback do treino
+          </ThemedText>
+        </Pressable>
         <Link href="/user_home" dismissTo style={styles.link}>
           <ThemedText type="link">HOME</ThemedText>
         </Link>
@@ -140,5 +148,12 @@ const styles = StyleSheet.create({
     shadowRadius: 18,
     elevation: 5,
     backgroundColor: "#2c1849",
+  },
+  button_2: {
+    backgroundColor: "yellow",
+    marginBottom: 10,
+    padding: 10,
+    borderRadius: 5,
+    alignItems: "center",
   },
 });
