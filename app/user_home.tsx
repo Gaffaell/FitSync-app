@@ -44,13 +44,13 @@ export default function ExerciciosSemana() {
         <Pressable
           onPress={() =>
             router.push({
-              pathname: "/user_screens/dia_semana/[id]",
+              pathname: "/user_screens/dia_semana/[user_id]",
               params: {
                 dia: day.label
                   .toLocaleLowerCase()
                   .normalize("NFD")
                   .replace(/[\u0300-\u036f]/g, ""),
-                id: user_id,
+                user_id: user_id,
               },
             })
           }
