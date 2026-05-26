@@ -1,74 +1,109 @@
 import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
 import { Link } from "expo-router";
-import { FlatList, StyleSheet, useColorScheme } from "react-native";
+import { initializeApp } from "firebase/app";
+import { collection, getDocs, getFirestore } from "firebase/firestore";
+import { useEffect, useState } from "react";
+import {
+  FlatList,
+  ScrollView,
+  StyleSheet,
+  TouchableOpacity,
+  useColorScheme,
+} from "react-native";
+
+const firebaseConfig = {
+  apiKey: "AIzaSyAiRZdjS62ZR3vjBIg4RJ5v0YyxxCWytkk",
+  authDomain: "academia-projeto-f6edb.firebaseapp.com",
+  projectId: "academia-projeto-f6edb",
+  storageBucket: "academia-projeto-f6edb.appspot.com",
+  messagingSenderId: "683804245498",
+  appId: "1:683804245498:web:f9fd6dfdfbfbc720757843",
+  measurementId: "G-0CLP55GERT",
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
 
 export default function ListaFeedbacks() {
   const theme = useColorScheme();
-  const containerBg = theme === "dark" ? "#071014" : "#edf6ff";
-  const cardBg = theme === "dark" ? "#111827" : "#ffffff";
-  const cardShadow = theme === "dark" ? "#000" : "#0a7ea4";
+  const containerBackground = theme === "dark" ? "#071014" : "#edf6ff";
+  const itemBackground = theme === "dark" ? "#111827" : "#ffffff";
+  const itemShadow = theme === "dark" ? "#000" : "#0a7ea4";
   const titleColor = theme === "dark" ? "#f8fafc" : "#0f4c81";
   const subtitleColor = theme === "dark" ? "#94a3b8" : "#4b6570";
-  const homeLinkStyle = {
-    ...styles.card,
-    backgroundColor: cardBg,
-    shadowColor: cardShadow,
+  const itemStyle = {
+    ...styles.item,
+    backgroundColor: itemBackground,
+    shadowColor: itemShadow,
   };
 
-  const DATA = [
-    { id: "ksadief", title: "feedback 1" },
-    { id: "ksaadfksjdief", title: "feedback 2" },
-    { id: "ksadief12weefds", title: "feedback 3" },
-    { id: "ksadief235r3sdfasd", title: "feedback 4" },
-    { id: "ksadiefergkdvjfk", title: "feedback 5" },
-  ];
+  const [feedbacks, setFeedbacks] = useState<any[]>([]);
+  const fetchFeedbacks = async () => {
+    try {
+      const querySnapshot = await getDocs(collection(db, "feedbacks"));
+      const lista: any[] = [];
+      querySnapshot.forEach((doc) => {
+        lista.push({ id: doc.id, ...doc.data() });
+      });
+      setFeedbacks(lista);
+    } catch (error) {
+      console.error("Erro ao buscar feedbacks:", error);
+    }
+  };
 
-  type ItemProps = { title: string };
-
-  const Item = ({ title }: ItemProps) => (
-    <ThemedView
-      style={[
-        styles.item,
-        { backgroundColor: cardBg, shadowColor: cardShadow },
-      ]}
-    >
-      <ThemedText type="defaultSemiBold" style={styles.title}>
-        {title}
-      </ThemedText>
-    </ThemedView>
-  );
+  useEffect(() => {
+    fetchFeedbacks();
+  }, []);
 
   return (
-    <ThemedView style={[styles.container, { backgroundColor: containerBg }]}>
-      <ThemedText type="title" style={[styles.heading, { color: titleColor }]}>
-        Feedbacks
-      </ThemedText>
-      <ThemedText
-        type="subtitle"
-        style={[styles.subtitle, { color: subtitleColor }]}
-      >
-        Veja os comentários recentes de seus alunos.
-      </ThemedText>
-
-      <FlatList
-        data={DATA}
-        renderItem={({ item }) => <Item title={item.title} />}
-        keyExtractor={(item) => item.id}
-        contentContainerStyle={styles.list}
-      />
-
-      <Link href="/adm_home" dismissTo style={homeLinkStyle}>
+    <ScrollView>
+      <ThemedView style={[styles.container, { backgroundColor: "#071014" }]}>
         <ThemedText
-          type="defaultSemiBold"
-          lightColor="#6b42c1"
-          darkColor="#c4b5fd"
-          style={styles.cardText}
+          type="title"
+          style={[styles.heading, { color: titleColor }]}
         >
-          Voltar para Home
+          Feedbacks
         </ThemedText>
-      </Link>
-    </ThemedView>
+        <ThemedText
+          type="subtitle"
+          style={[styles.subtitle, { color: subtitleColor }]}
+        >
+          Veja os comentários recentes de seus alunos.
+        </ThemedText>
+
+        <FlatList
+          data={feedbacks}
+          keyExtractor={(item) => item.id}
+          contentContainerStyle={styles.list}
+          renderItem={({ item }) => (
+            <TouchableOpacity style={item} key={item.id}>
+              <ThemedText type="defaultSemiBold" style={styles.nome}>
+                {item.dia_semana}
+              </ThemedText>
+              <ThemedText type="defaultSemiBold" style={styles.nome}>
+                {item.nome_aluno}
+              </ThemedText>
+              <ThemedText type="defaultSemiBold" style={styles.nome}>
+                {item.feedback_opcao}
+              </ThemedText>
+              <ThemedText type="defaultSemiBold" style={styles.nome}>
+                {item.feedback_detalhado}
+              </ThemedText>
+              <ThemedText type="defaultSemiBold" style={styles.nome}>
+                {item.id_aluno}
+              </ThemedText>
+            </TouchableOpacity>
+          )}
+        />
+
+        <Link href="/adm_home" dismissTo>
+          <ThemedText type="defaultSemiBold" style={styles.cardText}>
+            Voltar para Home
+          </ThemedText>
+        </Link>
+      </ThemedView>
+    </ScrollView>
   );
 }
 
@@ -113,4 +148,5 @@ const styles = StyleSheet.create({
     fontSize: 16,
     textAlign: "center",
   },
+  nome: { fontSize: 18, fontWeight: "700", marginBottom: 4 },
 });
