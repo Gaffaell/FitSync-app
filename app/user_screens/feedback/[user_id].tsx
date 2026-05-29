@@ -28,6 +28,7 @@ export default function Feedback() {
     dia_semana: dia ? dia.toString() : "",
     feedback_detalhado: "",
     feedback_opcao: "",
+    data: new Date().toLocaleDateString("en-GB"),
   });
   const handleChange = (name: string, value: string) => {
     setFormData({ ...formData, [name]: value });
@@ -42,6 +43,7 @@ export default function Feedback() {
         dia_semana: dia ? dia.toString() : "",
         feedback_detalhado: "",
         feedback_opcao: "",
+        data: new Date().toLocaleDateString("en-GB"),
       });
       router.push("/user_home");
     } catch (error) {

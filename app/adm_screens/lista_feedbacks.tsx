@@ -1,6 +1,6 @@
 import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
-import { Link } from "expo-router";
+import { Link, router } from "expo-router";
 import { initializeApp } from "firebase/app";
 import { collection, getDocs, getFirestore } from "firebase/firestore";
 import { useEffect, useState } from "react";
@@ -75,23 +75,40 @@ export default function ListaFeedbacks() {
         <FlatList
           data={feedbacks}
           keyExtractor={(item) => item.id}
-          contentContainerStyle={styles.list}
           renderItem={({ item }) => (
-            <TouchableOpacity style={item} key={item.id}>
+            <TouchableOpacity
+              style={styles.list}
+              key={item.id}
+              onPress={() =>
+                router.push({
+                  pathname: "/adm_screens/details_feedback/[user_id]",
+                  params: {
+                    user_id: item.id_aluno.toString(),
+                    dia: item.dia_semana.toString(),
+                    feedback_opcao: item.feedback_opcao.toString(),
+                    feedback_detalhado: item.feedback_detalhado.toString(),
+                    data: item.data.toString(),
+                  },
+                })
+              }
+            >
               <ThemedText type="defaultSemiBold" style={styles.nome}>
-                {item.dia_semana}
+                Dia do treino: {item.dia_semana}
               </ThemedText>
               <ThemedText type="defaultSemiBold" style={styles.nome}>
-                {item.nome_aluno}
+                Nome do aluno: {item.nome_aluno}
               </ThemedText>
               <ThemedText type="defaultSemiBold" style={styles.nome}>
-                {item.feedback_opcao}
+                Feedback resumindo: {item.feedback_opcao}
               </ThemedText>
               <ThemedText type="defaultSemiBold" style={styles.nome}>
-                {item.feedback_detalhado}
+                Feedback detalhado: {item.feedback_detalhado}
               </ThemedText>
               <ThemedText type="defaultSemiBold" style={styles.nome}>
-                {item.id_aluno}
+                ID do aluno: {item.id_aluno}
+              </ThemedText>
+              <ThemedText type="defaultSemiBold" style={styles.nome}>
+                Data do feedback: {item.data}
               </ThemedText>
             </TouchableOpacity>
           )}

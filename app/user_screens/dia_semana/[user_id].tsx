@@ -85,7 +85,6 @@ export default function ExerciciosDia() {
 
     getTreino();
   }, [dia, user_id]);
-  console.log(exercicio);
 
   return (
     <ScrollView>
