@@ -1,6 +1,6 @@
-import { Link, useLocalSearchParams } from "expo-router";
+import { Link, router, useLocalSearchParams } from "expo-router";
 import React, { useEffect, useState } from "react";
-import { FlatList, ScrollView, StyleSheet } from "react-native";
+import { FlatList, Pressable, ScrollView, StyleSheet } from "react-native";
 
 import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
@@ -29,20 +29,19 @@ const app = initializeApp(firebaseConfig);
 const db = getFirestore(app);
 
 export default function ExerciciosDia() {
-  const exercicio_id = "zBXTpBYQdlnjleCIDKcM"; // Substitua pelo ID do exercício logado
-  const { dia, id } = useLocalSearchParams();
+  const { dia, user_id } = useLocalSearchParams();
   const [treino, setTreino] = useState<any[]>([]);
   const [exercicio, setExercicio] = useState<any>(null);
 
   useEffect(() => {
     async function getTreino() {
-      if (typeof id !== "string") return;
+      if (typeof user_id !== "string") return;
       if (typeof dia !== "string") return;
 
       // 1) Fetch treino documents for the given day and aluno
       const treinoQuery = query(
         collection(db, dia),
-        where("id_aluno", "==", id),
+        where("id_aluno", "==", user_id),
       );
       const docSnap = await getDocs(treinoQuery);
       const treinoData: any[] = docSnap.docs.map((d) => ({
@@ -85,8 +84,7 @@ export default function ExerciciosDia() {
     }
 
     getTreino();
-  }, [dia, id]);
-  console.log(exercicio);
+  }, [dia, user_id]);
 
   return (
     <ScrollView>
@@ -110,6 +108,22 @@ export default function ExerciciosDia() {
             </ThemedView>
           )}
         />
+        <Pressable
+          style={styles.button_2}
+          onPress={() =>
+            router.push({
+              pathname: "/user_screens/feedback/[user_id]",
+              params: {
+                user_id: user_id.toString(),
+                dia: dia,
+              },
+            })
+          }
+        >
+          <ThemedText style={{ color: "black" }}>
+            Envie a sua experiência do treino para o professor!
+          </ThemedText>
+        </Pressable>
         <Link href="/user_home" dismissTo style={styles.link}>
           <ThemedText type="link">HOME</ThemedText>
         </Link>
@@ -140,5 +154,12 @@ const styles = StyleSheet.create({
     shadowRadius: 18,
     elevation: 5,
     backgroundColor: "#2c1849",
+  },
+  button_2: {
+    backgroundColor: "yellow",
+    marginBottom: 10,
+    padding: 10,
+    borderRadius: 5,
+    alignItems: "center",
   },
 });
