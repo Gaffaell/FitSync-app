@@ -1,5 +1,5 @@
 import { Link } from "expo-router";
-import { StyleSheet, useColorScheme } from "react-native";
+import { ScrollView, StyleSheet, useColorScheme } from "react-native";
 
 import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
@@ -16,86 +16,96 @@ export default function AdmScreen() {
   };
 
   return (
-    <ThemedView
-      style={styles.container}
-      lightColor="#edf6ff"
-      darkColor="#071014"
-    >
-      <ThemedText type="title" style={styles.heading}>
-        Bem vindo(a)
-      </ThemedText>
-      <ThemedText
-        type="subtitle"
-        lightColor="#4b6570"
-        darkColor="#9ca3af"
-        style={styles.subtitle}
+    <ScrollView>
+      <ThemedView
+        style={styles.container}
+        lightColor="#edf6ff"
+        darkColor="#071014"
       >
-        Gerencie alunos, treinos e feedbacks com rapidez e estilo.
-      </ThemedText>
-
-      <Link href="/adm_screens/cadastrar_aluno" dismissTo style={linkCardStyle}>
-        <ThemedText
-          type="defaultSemiBold"
-          lightColor="#0f4c81"
-          darkColor="#f8fafc"
-          style={styles.cardText}
-        >
-          Cadastrar aluno
+        <ThemedText type="title" style={styles.heading}>
+          Bem vindo(a)
         </ThemedText>
-      </Link>
-
-      <Link href="/adm_screens/lista_alunos" dismissTo style={linkCardStyle}>
         <ThemedText
-          type="defaultSemiBold"
-          lightColor="#6b42c1"
-          darkColor="#c4b5fd"
-          style={styles.cardText}
+          type="subtitle"
+          lightColor="#4b6570"
+          darkColor="#9ca3af"
+          style={styles.subtitle}
         >
-          Lista de alunos
+          Gerencie alunos, treinos e feedbacks com rapidez e estilo.
         </ThemedText>
-      </Link>
 
-      <Link
-        href="/adm_screens/cadastrar_exercicio"
-        dismissTo
-        style={linkCardStyle}
-      >
-        <ThemedText
-          type="defaultSemiBold"
-          lightColor="#d9730a"
-          darkColor="#fdba74"
-          style={styles.cardText}
+        <Link
+          href="/adm_screens/cadastrar_aluno"
+          dismissTo
+          style={linkCardStyle}
         >
-          Cadastrar exercício
-        </ThemedText>
-      </Link>
+          <ThemedText
+            type="defaultSemiBold"
+            lightColor="#0f4c81"
+            darkColor="#f8fafc"
+            style={styles.cardText}
+          >
+            Cadastrar aluno
+          </ThemedText>
+        </Link>
 
-      <Link
-        href="/adm_screens/lista_exercicios"
-        dismissTo
-        style={linkCardStyle}
-      >
-        <ThemedText
-          type="defaultSemiBold"
-          lightColor="#0a7ea4"
-          darkColor="#7dd3fc"
-          style={styles.cardText}
-        >
-          Lista de exercícios
-        </ThemedText>
-      </Link>
+        <Link href="/adm_screens/lista_alunos" dismissTo style={linkCardStyle}>
+          <ThemedText
+            type="defaultSemiBold"
+            lightColor="#6b42c1"
+            darkColor="#c4b5fd"
+            style={styles.cardText}
+          >
+            Lista de alunos
+          </ThemedText>
+        </Link>
 
-      <Link href="/adm_screens/lista_feedbacks" dismissTo style={linkCardStyle}>
-        <ThemedText
-          type="defaultSemiBold"
-          lightColor="#d9730a"
-          darkColor="#fdba74"
-          style={styles.cardText}
+        <Link
+          href="/adm_screens/cadastrar_exercicio"
+          dismissTo
+          style={linkCardStyle}
         >
-          Lista de feedbacks
-        </ThemedText>
-      </Link>
-    </ThemedView>
+          <ThemedText
+            type="defaultSemiBold"
+            lightColor="#d9730a"
+            darkColor="#fdba74"
+            style={styles.cardText}
+          >
+            Cadastrar exercício
+          </ThemedText>
+        </Link>
+
+        <Link
+          href="/adm_screens/lista_exercicios"
+          dismissTo
+          style={linkCardStyle}
+        >
+          <ThemedText
+            type="defaultSemiBold"
+            lightColor="#0a7ea4"
+            darkColor="#7dd3fc"
+            style={styles.cardText}
+          >
+            Lista de exercícios
+          </ThemedText>
+        </Link>
+
+        <Link
+          href="/adm_screens/lista_feedbacks"
+          dismissTo
+          style={linkCardStyle}
+        >
+          <ThemedText
+            type="defaultSemiBold"
+            lightColor="#d9730a"
+            darkColor="#fdba74"
+            style={styles.cardText}
+          >
+            Lista de feedbacks
+          </ThemedText>
+        </Link>
+      </ThemedView>
+    </ScrollView>
   );
 }
 

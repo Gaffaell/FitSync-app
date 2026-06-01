@@ -92,6 +92,11 @@ export default function ListaExercicios() {
             <ThemedText>Salvar</ThemedText>
           </Pressable>
         </Link>
+        <Link href="/adm_home" dismissTo>
+          <ThemedText type="defaultSemiBold" style={styles.cardText}>
+            Voltar para Home
+          </ThemedText>
+        </Link>
       </ThemedView>
     </ScrollView>
   );
