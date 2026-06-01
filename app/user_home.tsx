@@ -1,4 +1,9 @@
-import { Pressable, StyleSheet, useColorScheme } from "react-native";
+import {
+  Pressable,
+  ScrollView,
+  StyleSheet,
+  useColorScheme,
+} from "react-native";
 
 import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
@@ -22,62 +27,64 @@ export default function ExerciciosSemana() {
   const currentUserId = user_id ?? "";
 
   return (
-    <ThemedView
-      style={styles.container}
-      lightColor="#edf6ff"
-      darkColor="#071014"
-    >
-      <ThemedText type="title" style={styles.heading}>
-        Plano de treinos
-      </ThemedText>
-      <ThemedText
-        type="subtitle"
-        lightColor="#4b6570"
-        darkColor="#9ca3af"
-        style={styles.subtitle}
+    <ScrollView>
+      <ThemedView
+        style={styles.container}
+        lightColor="#edf6ff"
+        darkColor="#071014"
       >
-        Escolha o dia da semana para ver os exercícios planejados e começar seu
-        treino com foco.
-      </ThemedText>
-
-      <ThemedText type="default" style={styles.userIdText}>
-        {currentUserId
-          ? `ID do usuário: ${currentUserId}`
-          : "Usuário não identificado. Faça login novamente."}
-      </ThemedText>
-
-      {weekDays.map((day) => (
-        <Pressable
-          disabled={!currentUserId}
-          onPress={() =>
-            router.push({
-              pathname: "/user_screens/dia_semana/[user_id]",
-              params: {
-                dia: day.label
-                  .toLowerCase()
-                  .normalize("NFD")
-                  .replace(/[\u0300-\u036f]/g, ""),
-                user_id: currentUserId,
-              },
-            })
-          }
-          key={day.label}
-          style={[
-            styles.card,
-            { backgroundColor: cardBackground, shadowColor: cardShadow },
-          ]}
+        <ThemedText type="title" style={styles.heading}>
+          Plano de treinos
+        </ThemedText>
+        <ThemedText
+          type="subtitle"
+          lightColor="#4b6570"
+          darkColor="#9ca3af"
+          style={styles.subtitle}
         >
-          <ThemedText
-            type="defaultSemiBold"
-            lightColor={day.color}
-            darkColor={day.color}
-            style={styles.cardText}
+          Escolha o dia da semana para ver os exercícios planejados e começar
+          seu treino com foco.
+        </ThemedText>
+
+        <ThemedText type="default" style={styles.userIdText}>
+          {currentUserId
+            ? `ID do usuário: ${currentUserId}`
+            : "Usuário não identificado. Faça login novamente."}
+        </ThemedText>
+
+        {weekDays.map((day) => (
+          <Pressable
+            disabled={!currentUserId}
+            onPress={() =>
+              router.push({
+                pathname: "/user_screens/dia_semana/[user_id]",
+                params: {
+                  dia: day.label
+                    .toLowerCase()
+                    .normalize("NFD")
+                    .replace(/[\u0300-\u036f]/g, ""),
+                  user_id: currentUserId,
+                },
+              })
+            }
+            key={day.label}
+            style={[
+              styles.card,
+              { backgroundColor: cardBackground, shadowColor: cardShadow },
+            ]}
           >
-            {day.label}
-          </ThemedText>
-        </Pressable>
-      ))}
-    </ThemedView>
+            <ThemedText
+              type="defaultSemiBold"
+              lightColor={day.color}
+              darkColor={day.color}
+              style={styles.cardText}
+            >
+              {day.label}
+            </ThemedText>
+          </Pressable>
+        ))}
+      </ThemedView>
+    </ScrollView>
   );
 }
 

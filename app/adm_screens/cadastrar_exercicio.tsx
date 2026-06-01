@@ -1,5 +1,5 @@
 import { Link, router } from "expo-router";
-import { Pressable, StyleSheet, TextInput } from "react-native";
+import { Pressable, ScrollView, StyleSheet, TextInput } from "react-native";
 
 import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
@@ -48,37 +48,39 @@ export default function CadastrarExercicio() {
   };
 
   return (
-    <ThemedView style={styles.container}>
-      <ThemedText type="title" style={styles.titleContainer}>
-        Cadastrar exercício
-      </ThemedText>
-      <ThemedView style={styles.card}>
-        <ThemedText type="defaultSemiBold" style={styles.fieldLabel}>
-          Nome
+    <ScrollView>
+      <ThemedView style={styles.container}>
+        <ThemedText type="title" style={styles.titleContainer}>
+          Cadastrar exercício
         </ThemedText>
-        <TextInput
-          style={styles.input}
-          value={formData.nome}
-          onChangeText={(text) => handleChange("nome", text)}
-        />
-        <ThemedText type="defaultSemiBold" style={styles.fieldLabel}>
-          Descrição
-        </ThemedText>
-        <TextInput
-          style={styles.input}
-          value={formData.descricao}
-          onChangeText={(text) => handleChange("descricao", text)}
-        />
+        <ThemedView style={styles.card}>
+          <ThemedText type="defaultSemiBold" style={styles.fieldLabel}>
+            Nome
+          </ThemedText>
+          <TextInput
+            style={styles.input}
+            value={formData.nome}
+            onChangeText={(text) => handleChange("nome", text)}
+          />
+          <ThemedText type="defaultSemiBold" style={styles.fieldLabel}>
+            Descrição
+          </ThemedText>
+          <TextInput
+            style={styles.input}
+            value={formData.descricao}
+            onChangeText={(text) => handleChange("descricao", text)}
+          />
+        </ThemedView>
+        <Pressable onPress={handleSubmit} style={styles.button}>
+          <ThemedText>Salvar</ThemedText>
+        </Pressable>
+        <Link href="/adm_home" dismissTo>
+          <ThemedText type="defaultSemiBold" style={styles.cardText}>
+            Voltar para Home
+          </ThemedText>
+        </Link>
       </ThemedView>
-      <Pressable onPress={handleSubmit} style={styles.button}>
-        <ThemedText>Salvar</ThemedText>
-      </Pressable>
-      <Link href="/adm_home" dismissTo>
-        <ThemedText type="defaultSemiBold" style={styles.cardText}>
-          Voltar para Home
-        </ThemedText>
-      </Link>
-    </ThemedView>
+    </ScrollView>
   );
 }
 

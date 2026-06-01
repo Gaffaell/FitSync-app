@@ -1,5 +1,5 @@
 import { router, useLocalSearchParams } from "expo-router";
-import { Pressable, StyleSheet } from "react-native";
+import { Pressable, ScrollView, StyleSheet } from "react-native";
 
 import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
@@ -18,42 +18,44 @@ export default function DefinirTreino() {
   const { id } = useLocalSearchParams();
 
   return (
-    <ThemedView style={styles.container}>
-      <ThemedText type="title">Definir treino da semana</ThemedText>
-      {/* 
+    <ScrollView>
+      <ThemedView style={styles.container}>
+        <ThemedText type="title">Definir treino da semana</ThemedText>
+        {/* 
       Aqui você pode adicionar a lista de exercícios de cada dia da semana,
       busca em outro arquivo a lógica para exibir os exercícios de cada dia, ou seja,
       criar um componente genérico que recebe os exercícios como props e renderiza a lista de exercícios de cada dia da semana.
       pega as informaçoes do dia da semana que o usuario clicou no banco de dados
       */}
-      {weekDays.map((day) => (
-        <Pressable
-          onPress={() =>
-            router.push({
-              pathname: "/adm_screens/definir_treino/definir_treino_dia/[id]",
-              params: {
-                dia: day.label
-                  .toLocaleLowerCase()
-                  .normalize("NFD")
-                  .replace(/[\u0300-\u036f]/g, ""),
-                id: id.toString(),
-              },
-            })
-          }
-          key={day.label}
-          style={[styles.card]}
-        >
-          <ThemedText
-            type="defaultSemiBold"
-            lightColor={day.color}
-            darkColor={day.color}
-            style={styles.cardText}
+        {weekDays.map((day) => (
+          <Pressable
+            onPress={() =>
+              router.push({
+                pathname: "/adm_screens/definir_treino/definir_treino_dia/[id]",
+                params: {
+                  dia: day.label
+                    .toLocaleLowerCase()
+                    .normalize("NFD")
+                    .replace(/[\u0300-\u036f]/g, ""),
+                  id: id.toString(),
+                },
+              })
+            }
+            key={day.label}
+            style={[styles.card]}
           >
-            {day.label}
-          </ThemedText>
-        </Pressable>
-      ))}
-    </ThemedView>
+            <ThemedText
+              type="defaultSemiBold"
+              lightColor={day.color}
+              darkColor={day.color}
+              style={styles.cardText}
+            >
+              {day.label}
+            </ThemedText>
+          </Pressable>
+        ))}
+      </ThemedView>
+    </ScrollView>
   );
 }
 
