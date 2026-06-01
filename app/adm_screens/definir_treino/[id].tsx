@@ -1,4 +1,4 @@
-import { router, useLocalSearchParams } from "expo-router";
+import { Link, router, useLocalSearchParams } from "expo-router";
 import { Pressable, ScrollView, StyleSheet } from "react-native";
 
 import { ThemedText } from "@/components/themed-text";
@@ -48,6 +48,11 @@ export default function DefinirTreino() {
             </ThemedText>
           </Pressable>
         ))}
+        <Link href="/adm_home" dismissTo>
+          <ThemedText type="defaultSemiBold" style={styles.cardText}>
+            Voltar para Home
+          </ThemedText>
+        </Link>
       </ThemedView>
     </ScrollView>
   );

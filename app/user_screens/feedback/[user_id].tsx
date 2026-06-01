@@ -45,7 +45,7 @@ export default function Feedback() {
         feedback_opcao: "",
         data: new Date().toLocaleDateString("en-GB"),
       });
-      router.push("/user_home");
+      router.push({ pathname: "/user_home", params: { user_id: user_id } });
     } catch (error) {
       alert("Erro ao cadastrar feedback. Tente novamente.");
     }

@@ -1,10 +1,11 @@
-import { router, useLocalSearchParams } from "expo-router";
+import { Link, router, useLocalSearchParams } from "expo-router";
 import { deleteDoc, doc, getDoc, updateDoc } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
 import {
   Pressable,
   ScrollView,
   StyleSheet,
+  TextInput,
   TouchableOpacity,
 } from "react-native";
 
@@ -82,19 +83,19 @@ export default function InformacoesExercicio() {
         </ThemedText>
 
         <ThemedText>Nome: </ThemedText>
-        <input
-          type="text"
+        <TextInput
           placeholder="Novo nome"
+          style={styles.input}
           value={exercicio.nome}
-          onChange={(e) => setExercicio({ ...exercicio, nome: e.target.value })}
+          onChangeText={(text) => setExercicio({ ...exercicio, nome: text })}
         />
         <ThemedText>Descrição: </ThemedText>
-        <input
-          type="text"
+        <TextInput
           placeholder="Nova descrição"
+          style={styles.input}
           value={exercicio.descricao}
-          onChange={(e) =>
-            setExercicio({ ...exercicio, descricao: e.target.value })
+          onChangeText={(text) =>
+            setExercicio({ ...exercicio, descricao: text })
           }
         />
 
@@ -105,6 +106,11 @@ export default function InformacoesExercicio() {
         <Pressable onPress={() => deleteExercicio(id)} style={styles.button_2}>
           <ThemedText style={{ color: "black" }}>Excluir exercício</ThemedText>
         </Pressable>
+        <Link href="/adm_home" dismissTo>
+          <ThemedText type="defaultSemiBold" style={styles.cardText}>
+            Voltar para Home
+          </ThemedText>
+        </Link>
       </ThemedView>
     </ScrollView>
   );
@@ -141,6 +147,8 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 5,
     marginBottom: 10,
+    width: "100%",
+    textAlign: "center",
   },
   button: {
     backgroundColor: "#007bff",
@@ -166,5 +174,10 @@ const styles = StyleSheet.create({
   link: {
     marginTop: 15,
     paddingVertical: 15,
+  },
+  cardText: {
+    fontSize: 18,
+    fontWeight: "700",
+    color: "#ffffff",
   },
 });

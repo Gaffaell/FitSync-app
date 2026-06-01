@@ -1,7 +1,12 @@
-import { router, useLocalSearchParams } from "expo-router";
+import { Link, router, useLocalSearchParams } from "expo-router";
 import { doc, getDoc, updateDoc } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
-import { ScrollView, StyleSheet, TouchableOpacity } from "react-native";
+import {
+  ScrollView,
+  StyleSheet,
+  TextInput,
+  TouchableOpacity,
+} from "react-native";
 
 import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
@@ -48,16 +53,15 @@ export default function InformacoesAluno() {
       if (typeof id !== "string") return;
       const userRef = doc(db, "aluno", id);
       console.log(user);
-      console.log(typeof user.nome);
       await updateDoc(userRef, {
-        nome: user.nome,
-        idade: user.idade,
-        email: user.email,
-        senha: user.senha,
-        altura: user.altura,
-        peso: user.peso,
-        sexo: user.sexo,
-        telefone: user.telefone,
+        nome: String(user.nome ?? ""),
+        idade: String(user.idade ?? ""),
+        email: String(user.email ?? ""),
+        senha: String(user.senha ?? ""),
+        altura: String(user.altura ?? ""),
+        peso: String(user.peso ?? ""),
+        sexo: String(user.sexo ?? ""),
+        telefone: String(user.telefone ?? ""),
       });
       alert("Aluno atualizado com sucesso!");
       router.push(`/adm_screens/details/${id}`);
@@ -74,65 +78,74 @@ export default function InformacoesAluno() {
         </ThemedText>
 
         <ThemedText>Nome: </ThemedText>
-        <input
-          type="text"
+        <TextInput
           placeholder="Novo nome"
-          value={user.nome}
-          onChange={(e) => setUser({ ...user, nome: e.target.value })}
+          style={styles.input}
+          value={user.nome ?? ""}
+          onChangeText={(text) => setUser({ ...user, nome: text })}
         />
         <ThemedText>Idade: </ThemedText>
-        <input
-          type="text"
+        <TextInput
           placeholder="Nova idade"
-          value={user.idade}
-          onChange={(e) => setUser({ ...user, idade: e.target.value })}
+          style={styles.input}
+          value={user.idade ?? ""}
+          keyboardType="numeric"
+          onChangeText={(text) => setUser({ ...user, idade: text })}
         />
         <ThemedText>Email: </ThemedText>
-        <input
-          type="text"
+        <TextInput
           placeholder="Novo email"
-          value={user.email}
-          onChange={(e) => setUser({ ...user, email: e.target.value })}
+          style={styles.input}
+          value={user.email ?? ""}
+          keyboardType="email-address"
+          autoCapitalize="none"
+          onChangeText={(text) => setUser({ ...user, email: text })}
         />
         <ThemedText>Senha: </ThemedText>
-        <input
-          type="text"
+        <TextInput
           placeholder="Nova senha"
-          value={user.senha}
-          onChange={(e) => setUser({ ...user, senha: e.target.value })}
+          style={styles.input}
+          value={user.senha ?? ""}
+          onChangeText={(text) => setUser({ ...user, senha: text })}
         />
         <ThemedText>Altura: </ThemedText>
-        <input
-          type="text"
+        <TextInput
           placeholder="Nova altura"
-          value={user.altura}
-          onChange={(e) => setUser({ ...user, altura: e.target.value })}
+          style={styles.input}
+          value={user.altura ?? ""}
+          onChangeText={(text) => setUser({ ...user, altura: text })}
         />
         <ThemedText>Peso: </ThemedText>
-        <input
-          type="text"
+        <TextInput
           placeholder="Novo peso"
-          value={user.peso}
-          onChange={(e) => setUser({ ...user, peso: e.target.value })}
+          style={styles.input}
+          value={user.peso ?? ""}
+          onChangeText={(text) => setUser({ ...user, peso: text })}
         />
         <ThemedText>Sexo: </ThemedText>
-        <input
-          type="text"
+        <TextInput
           placeholder="Novo sexo"
-          value={user.sexo}
-          onChange={(e) => setUser({ ...user, sexo: e.target.value })}
+          style={styles.input}
+          value={user.sexo ?? ""}
+          onChangeText={(text) => setUser({ ...user, sexo: text })}
         />
         <ThemedText>Telefone: </ThemedText>
-        <input
-          type="text"
+        <TextInput
           placeholder="Novo telefone"
-          value={user.telefone}
-          onChange={(e) => setUser({ ...user, telefone: e.target.value })}
+          style={styles.input}
+          value={user.telefone ?? ""}
+          keyboardType="phone-pad"
+          onChangeText={(text) => setUser({ ...user, telefone: text })}
         />
 
         <TouchableOpacity onPress={() => updateUser(id)}>
           <ThemedText style={styles.button}>Salvar informações</ThemedText>
         </TouchableOpacity>
+        <Link href="/adm_home" dismissTo>
+          <ThemedText type="defaultSemiBold" style={styles.cardText}>
+            Voltar para Home
+          </ThemedText>
+        </Link>
       </ThemedView>
     </ScrollView>
   );
@@ -169,6 +182,8 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 5,
     marginBottom: 10,
+    width: "100%",
+    textAlign: "center",
   },
   button: {
     backgroundColor: "#007bff",
@@ -194,5 +209,10 @@ const styles = StyleSheet.create({
   link: {
     marginTop: 15,
     paddingVertical: 15,
+  },
+  cardText: {
+    fontSize: 18,
+    fontWeight: "700",
+    color: "#ffffff",
   },
 });

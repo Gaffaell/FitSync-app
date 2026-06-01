@@ -1,4 +1,4 @@
-import { router, useLocalSearchParams } from "expo-router";
+import { Link, router, useLocalSearchParams } from "expo-router";
 import {
   collection,
   deleteDoc,
@@ -216,6 +216,11 @@ export default function InformacoesAluno() {
         <Pressable onPress={() => deleteUser(id)} style={styles.button_2}>
           <ThemedText style={{ color: "black" }}>Excluir aluno</ThemedText>
         </Pressable>
+        <Link href="/adm_home" dismissTo>
+          <ThemedText type="defaultSemiBold" style={styles.cardText}>
+            Voltar para Home
+          </ThemedText>
+        </Link>
       </ThemedView>
     </ScrollView>
   );
@@ -302,5 +307,10 @@ const styles = StyleSheet.create({
   link: {
     marginTop: 15,
     paddingVertical: 15,
+  },
+  cardText: {
+    fontSize: 18,
+    fontWeight: "700",
+    color: "#ffffff",
   },
 });

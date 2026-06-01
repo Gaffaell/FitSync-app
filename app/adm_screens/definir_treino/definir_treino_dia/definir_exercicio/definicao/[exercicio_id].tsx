@@ -1,6 +1,6 @@
 import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
-import { router, useLocalSearchParams } from "expo-router";
+import { Link, router, useLocalSearchParams } from "expo-router";
 import React, { useState } from "react";
 import {
   Pressable,
@@ -151,6 +151,11 @@ export default function CadastroTreino() {
             Cadastrar
           </ThemedText>
         </Pressable>
+        <Link href="/adm_home" dismissTo>
+          <ThemedText type="defaultSemiBold" style={styles.cardText}>
+            Voltar para Home
+          </ThemedText>
+        </Link>
       </ThemedView>
     </ScrollView>
   );
@@ -222,4 +227,5 @@ const styles = StyleSheet.create({
     textAlign: "center",
     color: "#6b42c1",
   },
+  cardText: { fontSize: 16, textAlign: "center" },
 });
