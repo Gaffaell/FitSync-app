@@ -1,4 +1,4 @@
-import { router } from "expo-router";
+import { Link, router } from "expo-router";
 import { Pressable, StyleSheet, TextInput } from "react-native";
 
 import { ThemedText } from "@/components/themed-text";
@@ -73,6 +73,11 @@ export default function CadastrarExercicio() {
       <Pressable onPress={handleSubmit} style={styles.button}>
         <ThemedText>Salvar</ThemedText>
       </Pressable>
+      <Link href="/adm_home" dismissTo>
+        <ThemedText type="defaultSemiBold" style={styles.cardText}>
+          Voltar para Home
+        </ThemedText>
+      </Link>
     </ThemedView>
   );
 }
@@ -135,4 +140,5 @@ const styles = StyleSheet.create({
     marginTop: 15,
     paddingVertical: 15,
   },
+  cardText: { fontSize: 16, textAlign: "center" },
 });
