@@ -1,6 +1,6 @@
-import { router, useLocalSearchParams } from "expo-router";
+import { Link, router, useLocalSearchParams } from "expo-router";
 import React, { useEffect, useState } from "react";
-import { FlatList, Pressable, ScrollView, StyleSheet } from "react-native";
+import { FlatList, Pressable, StyleSheet, View } from "react-native";
 
 import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
@@ -87,54 +87,89 @@ export default function ExerciciosDia() {
   }, [dia, user_id]);
 
   return (
-    <ScrollView>
-      <ThemedView style={styles.container}>
-        <ThemedText type="title">Exercicios do dia</ThemedText>
-        <FlatList
-          data={treino}
-          keyExtractor={(item) => item.id}
-          renderItem={({ item }) => (
-            <ThemedView style={styles.item}>
-              <ThemedText type="defaultSemiBold">{item.nome}</ThemedText>
-              <ThemedText type="defaultSemiBold">{item.descricao}</ThemedText>
-              <ThemedText type="default">Séries: {item.series}</ThemedText>
-              <ThemedText type="default">
-                Repetições: {item.repeticoes}
-              </ThemedText>
-              <ThemedText type="default">Carga: {item.carga}</ThemedText>
-              <ThemedText type="default">
-                ID do Exercício: {item.id_exercicio}
-              </ThemedText>
-            </ThemedView>
-          )}
-        />
-        <Pressable
-          style={styles.button_2}
-          onPress={() =>
-            router.push({
-              pathname: "/user_screens/feedback/[user_id]",
-              params: {
-                user_id: user_id.toString(),
-                dia: dia,
-              },
-            })
-          }
-        >
-          <ThemedText style={{ color: "black" }}>
-            Envie a sua experiência do treino para o professor!
+    <ThemedView style={styles.container}>
+      <FlatList
+        data={treino}
+        keyExtractor={(item) => item.id}
+        contentContainerStyle={styles.flatListContent}
+        ListHeaderComponent={
+          <ThemedText type="title" style={styles.title}>
+            Exercicios do dia
           </ThemedText>
-        </Pressable>
-      </ThemedView>
-    </ScrollView>
+        }
+        ListFooterComponent={
+          <View style={styles.footer}>
+            <Pressable
+              style={styles.button_2}
+              onPress={() =>
+                router.push({
+                  pathname: "/user_screens/feedback/[user_id]",
+                  params: {
+                    user_id: user_id?.toString() ?? "",
+                    dia: dia,
+                  },
+                })
+              }
+            >
+              <ThemedText style={{ color: "black" }}>
+                Envie a sua experiência do treino para o professor!
+              </ThemedText>
+            </Pressable>
+
+            <Link href="/adm_home" dismissTo>
+              <ThemedText type="defaultSemiBold" style={styles.cardText}>
+                Voltar para Home
+              </ThemedText>
+            </Link>
+          </View>
+        }
+        renderItem={({ item }) => (
+          <ThemedView style={styles.item}>
+            <ThemedText type="defaultSemiBold">{item.nome}</ThemedText>
+            <ThemedText type="defaultSemiBold">{item.descricao}</ThemedText>
+            <ThemedText type="default">Séries: {item.series}</ThemedText>
+            <ThemedText type="default">
+              Repetições: {item.repeticoes}
+            </ThemedText>
+            <ThemedText type="default">Carga: {item.carga}</ThemedText>
+            <ThemedText type="default">
+              ID do Exercício: {item.id_exercicio}
+            </ThemedText>
+          </ThemedView>
+        )}
+        ListEmptyComponent={
+          <ThemedText type="default" style={styles.emptyText}>
+            Nenhum exercício encontrado para este dia.
+          </ThemedText>
+        }
+      />
+    </ThemedView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: "center",
-    justifyContent: "center",
     padding: 20,
+  },
+  flatListContent: {
+    alignItems: "center",
+    paddingBottom: 20,
+  },
+  title: {
+    marginBottom: 24,
+    textAlign: "center",
+  },
+  footer: {
+    width: "100%",
+    maxWidth: 520,
+    alignItems: "center",
+    marginTop: 20,
+  },
+  emptyText: {
+    marginTop: 12,
+    color: "#9ca3af",
+    textAlign: "center",
   },
   link: {
     marginTop: 15,
@@ -158,5 +193,9 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 5,
     alignItems: "center",
+  },
+  cardText: {
+    fontSize: 16,
+    textAlign: "center",
   },
 });

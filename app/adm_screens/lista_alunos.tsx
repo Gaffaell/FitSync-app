@@ -3,11 +3,10 @@ import { ThemedView } from "@/components/themed-view";
 import { Link, router } from "expo-router";
 import React, { useEffect, useState } from "react";
 import {
-  FlatList,
-  ScrollView,
-  StyleSheet,
-  TouchableOpacity,
-  useColorScheme,
+    FlatList,
+    StyleSheet,
+    TouchableOpacity,
+    useColorScheme,
 } from "react-native";
 
 // Firebase
@@ -60,44 +59,49 @@ export default function ListaAlunos() {
   };
 
   return (
-    <ScrollView>
-      <ThemedView
-        style={[styles.container, { backgroundColor: containerBackground }]}
-      >
-        <ThemedText type="title" style={[styles.title, { color: titleColor }]}>
-          Lista de Alunos
-        </ThemedText>
-        <ThemedText
-          type="subtitle"
-          style={[styles.subtitle, { color: subtitleColor }]}
-        >
-          Visualize e selecione um aluno para ver detalhes.
-        </ThemedText>
-
-        <FlatList
-          data={alunos}
-          keyExtractor={(item) => item.id}
-          contentContainerStyle={styles.list}
-          renderItem={({ item }) => (
-            <TouchableOpacity
-              style={itemStyle}
-              key={item.id}
-              onPress={() => router.push(`/adm_screens/details/${item.id}`)}
+    <ThemedView
+      style={[styles.container, { backgroundColor: containerBackground }]}
+    >
+      <FlatList
+        data={alunos}
+        keyExtractor={(item) => item.id}
+        contentContainerStyle={styles.list}
+        ListHeaderComponent={
+          <>
+            <ThemedText
+              type="title"
+              style={[styles.title, { color: titleColor }]}
             >
-              <ThemedText type="defaultSemiBold" style={styles.nome}>
-                {item.nome}
-              </ThemedText>
-              <ThemedText style={styles.email}>{item.email}</ThemedText>
-            </TouchableOpacity>
-          )}
-        />
-        <Link href="/adm_home" dismissTo>
-          <ThemedText type="defaultSemiBold" style={styles.cardText}>
-            Voltar para Home
-          </ThemedText>
-        </Link>
-      </ThemedView>
-    </ScrollView>
+              Lista de Alunos
+            </ThemedText>
+            <ThemedText
+              type="subtitle"
+              style={[styles.subtitle, { color: subtitleColor }]}
+            >
+              Visualize e selecione um aluno para ver detalhes.
+            </ThemedText>
+          </>
+        }
+        ListFooterComponent={
+          <Link href="/adm_home" dismissTo>
+            <ThemedText type="defaultSemiBold" style={styles.cardText}>
+              Voltar para Home
+            </ThemedText>
+          </Link>
+        }
+        renderItem={({ item }) => (
+          <TouchableOpacity
+            style={itemStyle}
+            onPress={() => router.push(`/adm_screens/details/${item.id}`)}
+          >
+            <ThemedText type="defaultSemiBold" style={styles.nome}>
+              {item.nome}
+            </ThemedText>
+            <ThemedText style={styles.email}>{item.email}</ThemedText>
+          </TouchableOpacity>
+        )}
+      />
+    </ThemedView>
   );
 }
 

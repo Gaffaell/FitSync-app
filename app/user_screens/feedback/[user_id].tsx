@@ -1,4 +1,4 @@
-import { router, useLocalSearchParams } from "expo-router";
+import { Link, router, useLocalSearchParams } from "expo-router";
 import { Pressable, ScrollView, StyleSheet, TextInput } from "react-native";
 
 import { ThemedText } from "@/components/themed-text";
@@ -106,6 +106,11 @@ export default function Feedback() {
         <Pressable onPress={handleSubmit} style={styles.button}>
           <ThemedText>Salvar</ThemedText>
         </Pressable>
+        <Link href="/adm_home" dismissTo>
+          <ThemedText type="defaultSemiBold" style={styles.cardText}>
+            Voltar para Home
+          </ThemedText>
+        </Link>
       </ThemedView>
     </ScrollView>
   );
@@ -157,5 +162,9 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 5,
     alignItems: "center",
+  },
+  cardText: {
+    fontSize: 16,
+    textAlign: "center",
   },
 });
