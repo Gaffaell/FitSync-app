@@ -2,7 +2,7 @@ import { Pressable, StyleSheet, useColorScheme } from "react-native";
 
 import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
-import { router } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 
 const weekDays = [
   { label: "Segunda-feira", color: "#0f4c81" },
@@ -14,12 +14,12 @@ const weekDays = [
   { label: "Domingo", color: "#22c55e" },
 ];
 
-const user_id = "bPmuD51VXGWUMaPHesEo"; // Substitua pelo ID do usuário logado
-
 export default function ExerciciosSemana() {
+  const { user_id } = useLocalSearchParams<{ user_id: string }>();
   const colorScheme = useColorScheme();
   const cardBackground = colorScheme === "dark" ? "#111827" : "#ffffff";
   const cardShadow = colorScheme === "dark" ? "#000" : "#0a7ea4";
+  const currentUserId = user_id ?? "";
 
   return (
     <ThemedView
@@ -40,17 +40,24 @@ export default function ExerciciosSemana() {
         treino com foco.
       </ThemedText>
 
+      <ThemedText type="default" style={styles.userIdText}>
+        {currentUserId
+          ? `ID do usuário: ${currentUserId}`
+          : "Usuário não identificado. Faça login novamente."}
+      </ThemedText>
+
       {weekDays.map((day) => (
         <Pressable
+          disabled={!currentUserId}
           onPress={() =>
             router.push({
               pathname: "/user_screens/dia_semana/[user_id]",
               params: {
                 dia: day.label
-                  .toLocaleLowerCase()
+                  .toLowerCase()
                   .normalize("NFD")
                   .replace(/[\u0300-\u036f]/g, ""),
-                user_id: user_id,
+                user_id: currentUserId,
               },
             })
           }
@@ -108,6 +115,11 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "700",
     color: "#ffffff",
+  },
+  userIdText: {
+    marginBottom: 16,
+    color: "#e2e8f0",
+    textAlign: "center",
   },
   homeCard: {
     marginTop: 12,

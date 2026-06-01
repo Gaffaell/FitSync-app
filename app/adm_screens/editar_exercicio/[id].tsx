@@ -1,4 +1,4 @@
-import { Link, router, useLocalSearchParams } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import { deleteDoc, doc, getDoc, updateDoc } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
 import {
@@ -105,10 +105,6 @@ export default function InformacoesExercicio() {
         <Pressable onPress={() => deleteExercicio(id)} style={styles.button_2}>
           <ThemedText style={{ color: "black" }}>Excluir exercício</ThemedText>
         </Pressable>
-
-        <Link href="/adm_home" dismissTo style={styles.link}>
-          <ThemedText type="link">HOME</ThemedText>
-        </Link>
       </ThemedView>
     </ScrollView>
   );

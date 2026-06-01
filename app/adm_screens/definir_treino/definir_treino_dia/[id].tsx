@@ -92,9 +92,6 @@ export default function ListaExercicios() {
             <ThemedText>Salvar</ThemedText>
           </Pressable>
         </Link>
-        <Link href="/adm_home" dismissTo style={styles.link}>
-          <ThemedText type="link">HOME</ThemedText>
-        </Link>
       </ThemedView>
     </ScrollView>
   );

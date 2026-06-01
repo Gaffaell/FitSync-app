@@ -113,7 +113,6 @@ export default function ListaFeedbacks() {
             </TouchableOpacity>
           )}
         />
-
         <Link href="/adm_home" dismissTo>
           <ThemedText type="defaultSemiBold" style={styles.cardText}>
             Voltar para Home

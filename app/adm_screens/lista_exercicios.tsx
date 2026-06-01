@@ -86,7 +86,6 @@ export default function ListaExercicios() {
             </TouchableOpacity>
           )}
         />
-
         <Link href="/adm_home" dismissTo>
           <ThemedText type="defaultSemiBold" style={styles.cardText}>
             Voltar para Home

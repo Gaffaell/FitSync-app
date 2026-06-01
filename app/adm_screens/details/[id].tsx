@@ -1,4 +1,4 @@
-import { Link, router, useLocalSearchParams } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import {
   collection,
   deleteDoc,
@@ -216,9 +216,6 @@ export default function InformacoesAluno() {
         <Pressable onPress={() => deleteUser(id)} style={styles.button_2}>
           <ThemedText style={{ color: "black" }}>Excluir aluno</ThemedText>
         </Pressable>
-        <Link href="/adm_home" dismissTo style={styles.link}>
-          <ThemedText type="link">HOME</ThemedText>
-        </Link>
       </ThemedView>
     </ScrollView>
   );

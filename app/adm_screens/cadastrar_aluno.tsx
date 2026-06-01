@@ -180,7 +180,7 @@ export default function CadastroAluno() {
           </ThemedText>
         </Pressable>
         <Link href="/adm_home" dismissTo>
-          <ThemedText type="link" style={styles.link}>
+          <ThemedText type="defaultSemiBold" style={styles.cardText}>
             Voltar para Home
           </ThemedText>
         </Link>
@@ -255,4 +255,5 @@ const styles = StyleSheet.create({
     textAlign: "center",
     color: "#6b42c1",
   },
+  cardText: { fontSize: 16, textAlign: "center" },
 });
