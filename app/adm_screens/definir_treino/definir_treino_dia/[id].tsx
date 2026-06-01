@@ -7,7 +7,6 @@ import React, { useEffect, useState } from "react";
 import {
   FlatList,
   Pressable,
-  ScrollView,
   StyleSheet,
   TouchableOpacity,
   useColorScheme,
@@ -55,50 +54,74 @@ export default function ListaExercicios() {
   const subtitleColor = theme === "dark" ? "#94a3b8" : "#4b6570";
 
   return (
-    <ScrollView>
-      <ThemedView style={[styles.container, { backgroundColor: containerBg }]}>
-        <FlatList
-          data={exercicios}
-          keyExtractor={(item) => item.id}
-          contentContainerStyle={styles.list}
-          renderItem={({ item }) => (
-            <TouchableOpacity style={styles.item} key={item.id}>
-              <ThemedText
-                type="defaultSemiBold"
-                style={styles.title}
-                onPress={() =>
-                  router.push({
-                    pathname:
-                      "/adm_screens/definir_treino/definir_treino_dia/definir_exercicio/definicao/[exercicio_id]",
-                    params: {
-                      exercicio_id: item.id.toString(),
-                      id: id.toString(),
-                      dia: dia.toString(),
-                    },
-                  })
-                }
+    <ThemedView style={[styles.container, { backgroundColor: containerBg }]}>
+      <FlatList
+        data={exercicios}
+        keyExtractor={(item) => item.id}
+        contentContainerStyle={styles.list}
+        ListHeaderComponent={
+          <>
+            <ThemedText
+              type="title"
+              style={[styles.title, { color: titleColor }]}
+            >
+              Exercícios
+            </ThemedText>
+            <ThemedText
+              type="subtitle"
+              style={[styles.cardText, { color: subtitleColor }]}
+            >
+              Selecione um exercício para definir no dia.
+            </ThemedText>
+          </>
+        }
+        ListFooterComponent={
+          <>
+            <Link href="/adm_home" asChild>
+              <Pressable
+                onPress={() => alert("Salvo com sucesso")}
+                style={styles.button}
               >
-                {item.nome}
+                <ThemedText>Salvar</ThemedText>
+              </Pressable>
+            </Link>
+
+            <Link href="/adm_home" dismissTo>
+              <ThemedText type="defaultSemiBold" style={styles.cardText}>
+                Voltar para Home
               </ThemedText>
-              <ThemedText style={styles.cardText}>{item.descricao}</ThemedText>
-            </TouchableOpacity>
-          )}
-        />
-        <Link href="/adm_home" asChild>
-          <Pressable
-            onPress={() => alert("Salvo com sucesso")}
-            style={styles.button}
-          >
-            <ThemedText>Salvar</ThemedText>
-          </Pressable>
-        </Link>
-        <Link href="/adm_home" dismissTo>
-          <ThemedText type="defaultSemiBold" style={styles.cardText}>
-            Voltar para Home
+            </Link>
+          </>
+        }
+        renderItem={({ item }) => (
+          <TouchableOpacity style={styles.item}>
+            <ThemedText
+              type="defaultSemiBold"
+              style={styles.title}
+              onPress={() =>
+                router.push({
+                  pathname:
+                    "/adm_screens/definir_treino/definir_treino_dia/definir_exercicio/definicao/[exercicio_id]",
+                  params: {
+                    exercicio_id: item.id.toString(),
+                    id: id.toString(),
+                    dia: dia.toString(),
+                  },
+                })
+              }
+            >
+              {item.nome}
+            </ThemedText>
+            <ThemedText style={styles.cardText}>{item.descricao}</ThemedText>
+          </TouchableOpacity>
+        )}
+        ListEmptyComponent={
+          <ThemedText style={styles.cardText}>
+            Nenhum exercício encontrado.
           </ThemedText>
-        </Link>
-      </ThemedView>
-    </ScrollView>
+        }
+      />
+    </ThemedView>
   );
 }
 
@@ -110,7 +133,7 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   item: {
-    backgroundColor: "gray",
+    backgroundColor: "#2c1849",
     padding: 20,
     marginVertical: 8,
     marginHorizontal: 10,

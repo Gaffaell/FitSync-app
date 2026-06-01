@@ -6,7 +6,6 @@ import { collection, getDocs, getFirestore } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
 import {
   FlatList,
-  ScrollView,
   StyleSheet,
   TouchableOpacity,
   useColorScheme,
@@ -52,47 +51,49 @@ export default function ListaExercicios() {
   const subtitleColor = theme === "dark" ? "#94a3b8" : "#4b6570";
 
   return (
-    <ScrollView>
-      <ThemedView style={[styles.container, { backgroundColor: containerBg }]}>
-        <ThemedText
-          type="title"
-          style={[styles.heading, { color: titleColor }]}
-        >
-          Exercícios
-        </ThemedText>
-        <ThemedText
-          type="subtitle"
-          style={[styles.subtitle, { color: subtitleColor }]}
-        >
-          Liste e gerencie os exercícios disponíveis.
-        </ThemedText>
-
-        <FlatList
-          data={exercicios}
-          keyExtractor={(item) => item.id}
-          contentContainerStyle={styles.list}
-          renderItem={({ item }) => (
-            <TouchableOpacity
-              style={styles.item}
-              key={item.id}
-              onPress={() =>
-                router.push(`/adm_screens/editar_exercicio/${item.id}`)
-              }
+    <ThemedView style={[styles.container, { backgroundColor: containerBg }]}>
+      <FlatList
+        data={exercicios}
+        keyExtractor={(item) => item.id}
+        contentContainerStyle={styles.list}
+        ListHeaderComponent={
+          <>
+            <ThemedText
+              type="title"
+              style={[styles.heading, { color: titleColor }]}
             >
-              <ThemedText type="defaultSemiBold" style={styles.title}>
-                {item.nome}
-              </ThemedText>
-              <ThemedText style={styles.cardText}>{item.descricao}</ThemedText>
-            </TouchableOpacity>
-          )}
-        />
-        <Link href="/adm_home" dismissTo>
-          <ThemedText type="defaultSemiBold" style={styles.cardText}>
-            Voltar para Home
-          </ThemedText>
-        </Link>
-      </ThemedView>
-    </ScrollView>
+              Exercícios
+            </ThemedText>
+            <ThemedText
+              type="subtitle"
+              style={[styles.subtitle, { color: subtitleColor }]}
+            >
+              Liste e gerencie os exercícios disponíveis.
+            </ThemedText>
+          </>
+        }
+        ListFooterComponent={
+          <Link href="/adm_home" dismissTo>
+            <ThemedText type="defaultSemiBold" style={styles.cardText}>
+              Voltar para Home
+            </ThemedText>
+          </Link>
+        }
+        renderItem={({ item }) => (
+          <TouchableOpacity
+            style={styles.item}
+            onPress={() =>
+              router.push(`/adm_screens/editar_exercicio/${item.id}`)
+            }
+          >
+            <ThemedText type="defaultSemiBold" style={styles.title}>
+              {item.nome}
+            </ThemedText>
+            <ThemedText style={styles.cardText}>{item.descricao}</ThemedText>
+          </TouchableOpacity>
+        )}
+      />
+    </ThemedView>
   );
 }
 

@@ -6,7 +6,6 @@ import { collection, getDocs, getFirestore } from "firebase/firestore";
 import { useEffect, useState } from "react";
 import {
   FlatList,
-  ScrollView,
   StyleSheet,
   TouchableOpacity,
   useColorScheme,
@@ -57,69 +56,72 @@ export default function ListaFeedbacks() {
   }, []);
 
   return (
-    <ScrollView>
-      <ThemedView style={[styles.container, { backgroundColor: "#071014" }]}>
-        <ThemedText
-          type="title"
-          style={[styles.heading, { color: titleColor }]}
-        >
-          Feedbacks
-        </ThemedText>
-        <ThemedText
-          type="subtitle"
-          style={[styles.subtitle, { color: subtitleColor }]}
-        >
-          Veja os comentários recentes de seus alunos.
-        </ThemedText>
-
-        <FlatList
-          data={feedbacks}
-          keyExtractor={(item) => item.id}
-          renderItem={({ item }) => (
-            <TouchableOpacity
-              style={styles.list}
-              key={item.id}
-              onPress={() =>
-                router.push({
-                  pathname: "/adm_screens/details_feedback/[user_id]",
-                  params: {
-                    user_id: item.id_aluno.toString(),
-                    dia: item.dia_semana.toString(),
-                    feedback_opcao: item.feedback_opcao.toString(),
-                    feedback_detalhado: item.feedback_detalhado.toString(),
-                    data: item.data.toString(),
-                  },
-                })
-              }
+    <ThemedView style={[styles.container, { backgroundColor: "#071014" }]}>
+      <FlatList
+        data={feedbacks}
+        keyExtractor={(item) => item.id}
+        contentContainerStyle={styles.list}
+        ListHeaderComponent={
+          <>
+            <ThemedText
+              type="title"
+              style={[styles.heading, { color: titleColor }]}
             >
-              <ThemedText type="defaultSemiBold" style={styles.nome}>
-                Dia do treino: {item.dia_semana}
-              </ThemedText>
-              <ThemedText type="defaultSemiBold" style={styles.nome}>
-                Nome do aluno: {item.nome_aluno}
-              </ThemedText>
-              <ThemedText type="defaultSemiBold" style={styles.nome}>
-                Feedback resumindo: {item.feedback_opcao}
-              </ThemedText>
-              <ThemedText type="defaultSemiBold" style={styles.nome}>
-                Feedback detalhado: {item.feedback_detalhado}
-              </ThemedText>
-              <ThemedText type="defaultSemiBold" style={styles.nome}>
-                ID do aluno: {item.id_aluno}
-              </ThemedText>
-              <ThemedText type="defaultSemiBold" style={styles.nome}>
-                Data do feedback: {item.data}
-              </ThemedText>
-            </TouchableOpacity>
-          )}
-        />
-        <Link href="/adm_home" dismissTo>
-          <ThemedText type="defaultSemiBold" style={styles.cardText}>
-            Voltar para Home
-          </ThemedText>
-        </Link>
-      </ThemedView>
-    </ScrollView>
+              Feedbacks
+            </ThemedText>
+            <ThemedText
+              type="subtitle"
+              style={[styles.subtitle, { color: subtitleColor }]}
+            >
+              Veja os comentários recentes de seus alunos.
+            </ThemedText>
+          </>
+        }
+        ListFooterComponent={
+          <Link href="/adm_home" dismissTo>
+            <ThemedText type="defaultSemiBold" style={styles.cardText}>
+              Voltar para Home
+            </ThemedText>
+          </Link>
+        }
+        renderItem={({ item }) => (
+          <TouchableOpacity
+            style={styles.list}
+            onPress={() =>
+              router.push({
+                pathname: "/adm_screens/details_feedback/[user_id]",
+                params: {
+                  user_id: item.id_aluno.toString(),
+                  dia: item.dia_semana.toString(),
+                  feedback_opcao: item.feedback_opcao.toString(),
+                  feedback_detalhado: item.feedback_detalhado.toString(),
+                  data: item.data.toString(),
+                },
+              })
+            }
+          >
+            <ThemedText type="defaultSemiBold" style={styles.nome}>
+              Dia do treino: {item.dia_semana}
+            </ThemedText>
+            <ThemedText type="defaultSemiBold" style={styles.nome}>
+              Nome do aluno: {item.nome_aluno}
+            </ThemedText>
+            <ThemedText type="defaultSemiBold" style={styles.nome}>
+              Feedback resumindo: {item.feedback_opcao}
+            </ThemedText>
+            <ThemedText type="defaultSemiBold" style={styles.nome}>
+              Feedback detalhado: {item.feedback_detalhado}
+            </ThemedText>
+            <ThemedText type="defaultSemiBold" style={styles.nome}>
+              ID do aluno: {item.id_aluno}
+            </ThemedText>
+            <ThemedText type="defaultSemiBold" style={styles.nome}>
+              Data do feedback: {item.data}
+            </ThemedText>
+          </TouchableOpacity>
+        )}
+      />
+    </ThemedView>
   );
 }
 
