@@ -1,14 +1,91 @@
 import { Image } from "expo-image";
-import { Link } from "expo-router";
-import { Pressable, StyleSheet, TextInput } from "react-native";
+import { router } from "expo-router";
+import {
+  Pressable,
+  StyleSheet,
+  TextInput,
+  View,
+  useColorScheme,
+} from "react-native";
 
 import ParallaxScrollView from "@/components/parallax-scroll-view";
 import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
+import { initializeApp } from "firebase/app";
+import {
+  collection,
+  getDocs,
+  getFirestore,
+  query,
+  where,
+} from "firebase/firestore";
+import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 
+const firebaseConfig = {
+  apiKey: "AIzaSyAiRZdjS62ZR3vjBIg4RJ5v0YyxxCWytkk",
+  authDomain: "academia-projeto-f6edb.firebaseapp.com",
+  projectId: "academia-projeto-f6edb",
+  storageBucket: "academia-projeto-f6edb.appspot.com",
+  messagingSenderId: "683804245498",
+  appId: "1:683804245498:web:f9fd6dfdfbfbc720757843",
+  measurementId: "G-0CLP55GERT",
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+
+type LoginForm = {
+  email: string;
+  senha: string;
+};
+
 export default function HomeScreen() {
-  const { control, handleSubmit } = useForm();
+  const { control, handleSubmit } = useForm<LoginForm>({
+    defaultValues: {
+      email: "",
+      senha: "",
+    },
+  });
+  const [message, setMessage] = useState("");
+  const [loading, setLoading] = useState(false);
+  const colorScheme = useColorScheme();
+  const buttonBackground = colorScheme === "dark" ? "#2563eb" : "#007bff";
+
+  const handleLogin = async (role: "adm" | "usuario", data: LoginForm) => {
+    setMessage("");
+    setLoading(true);
+
+    try {
+      const collectionName = role === "adm" ? "adm" : "aluno";
+      const usersQuery = query(
+        collection(db, collectionName),
+        where("email", "==", data.email),
+        where("senha", "==", data.senha),
+      );
+      const querySnapshot = await getDocs(usersQuery);
+
+      if (querySnapshot.empty) {
+        setMessage("Credenciais inválidas. Verifique e tente novamente.");
+      } else {
+        const userDoc = querySnapshot.docs[0];
+        const id = userDoc.id;
+
+        if (role === "adm") {
+          router.push("/adm_home");
+        } else {
+          router.push({ pathname: "/user_home", params: { user_id: id } });
+        }
+      }
+    } catch (error) {
+      console.error(error);
+      setMessage(
+        "Erro ao conectar ao banco de dados. Tente novamente mais tarde.",
+      );
+    } finally {
+      setLoading(false);
+    }
+  };
 
   return (
     <ParallaxScrollView
@@ -23,23 +100,25 @@ export default function HomeScreen() {
       <ThemedView style={{ display: "flex", flexDirection: "column", gap: 10 }}>
         <Controller
           control={control}
-          name="username"
+          name="email"
           render={({ field: { onChange, value } }) => (
             <TextInput
-              placeholder="Username"
+              placeholder="Email"
               placeholderTextColor={"white"}
               value={value}
               onChangeText={onChange}
+              keyboardType="email-address"
+              autoCapitalize="none"
               style={styles.input}
             />
           )}
         />
         <Controller
           control={control}
-          name="password"
+          name="senha"
           render={({ field: { onChange, value } }) => (
             <TextInput
-              placeholder="Password"
+              placeholder="Senha"
               placeholderTextColor={"white"}
               value={value}
               onChangeText={onChange}
@@ -48,84 +127,34 @@ export default function HomeScreen() {
             />
           )}
         />
-        <Link href="/adm_home" asChild>
-          <Pressable style={styles.button}>
-            <ThemedText>Tela de adm</ThemedText>
-          </Pressable>
-        </Link>
-        <Link href="/user_home" asChild>
-          <Pressable style={styles.button}>
-            <ThemedText>Tela de usuário</ThemedText>
-          </Pressable>
-        </Link>
-      </ThemedView>
-      {/*
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
-        <HelloWave />
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-        <ThemedText>
-          Edit{" "}
-          <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText>{" "}
-          to see changes. Press{" "}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({
-              ios: "cmd + d",
-              android: "cmd + m",
-              web: "F12",
-            })}
-          </ThemedText>{" "}
-          to open developer tools.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <Link href="/modal">
-          <Link.Trigger>
-            <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-          </Link.Trigger>
-          <Link.Preview />
-          <Link.Menu>
-            <Link.MenuAction
-              title="Action"
-              icon="cube"
-              onPress={() => alert("Action pressed")}
-            />
-            <Link.MenuAction
-              title="Share"
-              icon="square.and.arrow.up"
-              onPress={() => alert("Share pressed")}
-            />
-            <Link.Menu title="More" icon="ellipsis">
-              <Link.MenuAction
-                title="Delete"
-                icon="trash"
-                destructive
-                onPress={() => alert("Delete pressed")}
-              />
-            </Link.Menu>
-          </Link.Menu>
-        </Link>
 
-        <ThemedText>
-          {`Tap the Explore tab to learn more about what's included in this starter app.`}
-        </ThemedText>
+        {message ? (
+          <View style={styles.messageBox}>
+            <ThemedText type="default" style={styles.messageText}>
+              {message}
+            </ThemedText>
+          </View>
+        ) : null}
+
+        <Pressable
+          disabled={loading}
+          onPress={handleSubmit((data) => handleLogin("adm", data))}
+          style={[styles.button, { backgroundColor: buttonBackground }]}
+        >
+          <ThemedText>
+            {loading ? "Verificando adm..." : "Login como adm"}
+          </ThemedText>
+        </Pressable>
+        <Pressable
+          disabled={loading}
+          onPress={handleSubmit((data) => handleLogin("usuario", data))}
+          style={[styles.button, { backgroundColor: buttonBackground }]}
+        >
+          <ThemedText>
+            {loading ? "Verificando usuário..." : "Login como usuário"}
+          </ThemedText>
+        </Pressable>
       </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
-          {`When you're ready, run `}
-          <ThemedText type="defaultSemiBold">
-            npm run reset-project
-          </ThemedText>{" "}
-          to get a fresh <ThemedText type="defaultSemiBold">app</ThemedText>{" "}
-          directory. This will move the current{" "}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{" "}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
-      </ThemedView>
-      */}
     </ParallaxScrollView>
   );
 }
@@ -155,8 +184,16 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     marginBottom: 10,
   },
+  messageBox: {
+    padding: 10,
+    backgroundColor: "rgba(255,255,255,0.12)",
+    borderRadius: 5,
+    marginBottom: 10,
+  },
+  messageText: {
+    color: "#fde68a",
+  },
   button: {
-    backgroundColor: "#007bff",
     padding: 10,
     borderRadius: 5,
     alignItems: "center",
