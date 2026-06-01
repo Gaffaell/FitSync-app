@@ -21,12 +21,6 @@ export default function DefinirTreino() {
     <ScrollView>
       <ThemedView style={styles.container}>
         <ThemedText type="title">Definir treino da semana</ThemedText>
-        {/* 
-      Aqui você pode adicionar a lista de exercícios de cada dia da semana,
-      busca em outro arquivo a lógica para exibir os exercícios de cada dia, ou seja,
-      criar um componente genérico que recebe os exercícios como props e renderiza a lista de exercícios de cada dia da semana.
-      pega as informaçoes do dia da semana que o usuario clicou no banco de dados
-      */}
         {weekDays.map((day) => (
           <Pressable
             onPress={() =>
