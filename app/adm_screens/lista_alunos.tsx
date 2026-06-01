@@ -1,6 +1,6 @@
 import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
-import { Link, router } from "expo-router";
+import { router } from "expo-router";
 import React, { useEffect, useState } from "react";
 import {
   FlatList,
@@ -91,12 +91,6 @@ export default function ListaAlunos() {
             </TouchableOpacity>
           )}
         />
-
-        <Link href="/adm_home" dismissTo>
-          <ThemedText type="defaultSemiBold" style={styles.cardText}>
-            Voltar para Home
-          </ThemedText>
-        </Link>
       </ThemedView>
     </ScrollView>
   );

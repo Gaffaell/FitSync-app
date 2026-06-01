@@ -1,4 +1,4 @@
-import { Link, router, useLocalSearchParams } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { FlatList, Pressable, ScrollView, StyleSheet } from "react-native";
 
@@ -124,9 +124,6 @@ export default function ExerciciosDia() {
             Envie a sua experiência do treino para o professor!
           </ThemedText>
         </Pressable>
-        <Link href="/user_home" dismissTo style={styles.link}>
-          <ThemedText type="link">HOME</ThemedText>
-        </Link>
       </ThemedView>
     </ScrollView>
   );

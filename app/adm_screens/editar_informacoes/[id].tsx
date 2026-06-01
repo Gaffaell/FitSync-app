@@ -1,4 +1,4 @@
-import { Link, router, useLocalSearchParams } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import { doc, getDoc, updateDoc } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
 import { ScrollView, StyleSheet, TouchableOpacity } from "react-native";
@@ -133,9 +133,6 @@ export default function InformacoesAluno() {
         <TouchableOpacity onPress={() => updateUser(id)}>
           <ThemedText style={styles.button}>Salvar informações</ThemedText>
         </TouchableOpacity>
-        <Link href="/adm_home" dismissTo style={styles.link}>
-          <ThemedText type="link">HOME</ThemedText>
-        </Link>
       </ThemedView>
     </ScrollView>
   );

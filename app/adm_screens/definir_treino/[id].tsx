@@ -53,13 +53,6 @@ export default function DefinirTreino() {
           </ThemedText>
         </Pressable>
       ))}
-
-      <Pressable style={styles.link}>
-        <ThemedText type="link">HOME</ThemedText>
-      </Pressable>
-      <Pressable style={styles.link}>
-        <ThemedText type="link">Voltar</ThemedText>
-      </Pressable>
     </ThemedView>
   );
 }

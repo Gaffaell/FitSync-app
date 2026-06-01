@@ -1,6 +1,6 @@
 import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
-import { Link, router } from "expo-router";
+import { router } from "expo-router";
 import React, { useState } from "react";
 import {
   Pressable,
@@ -179,11 +179,6 @@ export default function CadastroAluno() {
             Cadastrar
           </ThemedText>
         </Pressable>
-        <Link href="/adm_home" dismissTo>
-          <ThemedText type="link" style={styles.link}>
-            Voltar para Home
-          </ThemedText>
-        </Link>
       </ThemedView>
     </ScrollView>
   );

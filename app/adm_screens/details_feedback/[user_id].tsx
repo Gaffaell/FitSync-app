@@ -1,4 +1,4 @@
-import { Link, router, useLocalSearchParams } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import {
   collection,
   deleteDoc,
@@ -191,9 +191,6 @@ export default function InformacoesAluno() {
         <Pressable onPress={() => deleteFeedback()} style={styles.button_2}>
           <ThemedText style={{ color: "black" }}>Excluir feedback</ThemedText>
         </Pressable>
-        <Link href="/adm_home" dismissTo style={styles.link}>
-          <ThemedText type="link">HOME</ThemedText>
-        </Link>
       </ThemedView>
     </ScrollView>
   );

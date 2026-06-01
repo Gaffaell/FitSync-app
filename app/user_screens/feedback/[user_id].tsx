@@ -1,4 +1,4 @@
-import { Link, router, useLocalSearchParams } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import { Pressable, ScrollView, StyleSheet, TextInput } from "react-native";
 
 import { ThemedText } from "@/components/themed-text";
@@ -106,9 +106,6 @@ export default function Feedback() {
         <Pressable onPress={handleSubmit} style={styles.button}>
           <ThemedText>Salvar</ThemedText>
         </Pressable>
-        <Link href="/user_home" dismissTo style={styles.link}>
-          <ThemedText type="link">HOME</ThemedText>
-        </Link>
       </ThemedView>
     </ScrollView>
   );

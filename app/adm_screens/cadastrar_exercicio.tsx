@@ -1,4 +1,4 @@
-import { Link, router } from "expo-router";
+import { router } from "expo-router";
 import { Pressable, StyleSheet, TextInput } from "react-native";
 
 import { ThemedText } from "@/components/themed-text";
@@ -73,9 +73,6 @@ export default function CadastrarExercicio() {
       <Pressable onPress={handleSubmit} style={styles.button}>
         <ThemedText>Salvar</ThemedText>
       </Pressable>
-      <Link href="/adm_home" dismissTo style={styles.link}>
-        <ThemedText type="link">HOME</ThemedText>
-      </Link>
     </ThemedView>
   );
 }
