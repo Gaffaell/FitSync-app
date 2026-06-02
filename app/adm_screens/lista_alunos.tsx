@@ -2,12 +2,9 @@ import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
 import { Link, router } from "expo-router";
 import React, { useEffect, useState } from "react";
-import {
-    FlatList,
-    StyleSheet,
-    TouchableOpacity,
-    useColorScheme,
-} from "react-native";
+import { FlatList, StyleSheet, TouchableOpacity } from "react-native";
+
+import { useThemeColor } from "@/hooks/use-theme-color";
 
 // Firebase
 import { initializeApp } from "firebase/app";
@@ -46,45 +43,47 @@ export default function ListaAlunos() {
     fetchAlunos();
   }, []);
 
-  const theme = useColorScheme();
-  const containerBackground = theme === "dark" ? "#071014" : "#edf6ff";
-  const itemBackground = theme === "dark" ? "#111827" : "#ffffff";
-  const itemShadow = theme === "dark" ? "#000" : "#0a7ea4";
-  const titleColor = theme === "dark" ? "#f8fafc" : "#0f4c81";
-  const subtitleColor = theme === "dark" ? "#94a3b8" : "#4b6570";
+  const accentColor = useThemeColor({}, "accent");
+  const pageBackground = useThemeColor(
+    { light: "#F3F4FF", dark: "#020617" },
+    "background",
+  );
+  const cardBackground = useThemeColor(
+    { light: "#FFFFFF", dark: "#111827" },
+    "background",
+  );
+  const textColor = useThemeColor({}, "text");
   const itemStyle = {
     ...styles.item,
-    backgroundColor: itemBackground,
-    shadowColor: itemShadow,
+    backgroundColor: cardBackground,
+    borderColor: accentColor,
+    shadowColor: accentColor,
   };
 
   return (
-    <ThemedView
-      style={[styles.container, { backgroundColor: containerBackground }]}
-    >
+    <ThemedView style={[styles.container, { backgroundColor: pageBackground }]}>
       <FlatList
         data={alunos}
         keyExtractor={(item) => item.id}
         contentContainerStyle={styles.list}
         ListHeaderComponent={
           <>
-            <ThemedText
-              type="title"
-              style={[styles.title, { color: titleColor }]}
-            >
-              Lista de Alunos
-            </ThemedText>
-            <ThemedText
-              type="subtitle"
-              style={[styles.subtitle, { color: subtitleColor }]}
-            >
-              Visualize e selecione um aluno para ver detalhes.
-            </ThemedText>
+            <ThemedView style={[styles.hero, { backgroundColor: accentColor }]}>
+              <ThemedText type="title" style={styles.heroTitle}>
+                Lista de alunos
+              </ThemedText>
+              <ThemedText style={styles.heroSubtitle}>
+                Visualize os alunos cadastrados e toque para ver seus dados.
+              </ThemedText>
+            </ThemedView>
           </>
         }
         ListFooterComponent={
-          <Link href="/adm_home" dismissTo>
-            <ThemedText type="defaultSemiBold" style={styles.cardText}>
+          <Link href="/adm_home" dismissTo style={styles.linkButton}>
+            <ThemedText
+              type="defaultSemiBold"
+              style={[styles.linkText, { color: accentColor }]}
+            >
               Voltar para Home
             </ThemedText>
           </Link>
@@ -108,24 +107,55 @@ export default function ListaAlunos() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 24,
+    padding: 20,
     alignItems: "center",
     justifyContent: "flex-start",
   },
-  title: { marginTop: 56, marginBottom: 6, textAlign: "center" },
+  hero: {
+    width: "100%",
+    maxWidth: 520,
+    borderRadius: 24,
+    padding: 24,
+    marginBottom: 24,
+    shadowColor: "#8B5CF6",
+    shadowOffset: { width: 0, height: 14 },
+    shadowOpacity: 0.18,
+    shadowRadius: 22,
+    elevation: 6,
+  },
+  heroTitle: {
+    color: "#FFFFFF",
+    marginBottom: 10,
+    textAlign: "center",
+  },
+  heroSubtitle: {
+    color: "rgba(255,255,255,0.92)",
+    fontSize: 15,
+    lineHeight: 22,
+    textAlign: "center",
+  },
+  title: {
+    marginTop: 0,
+    marginBottom: 6,
+    textAlign: "center",
+  },
   subtitle: {
     marginBottom: 24,
     lineHeight: 22,
     maxWidth: 360,
     textAlign: "center",
   },
-  list: { width: "100%", paddingBottom: 20 },
+  list: {
+    width: "100%",
+    paddingBottom: 20,
+  },
   item: {
     width: "100%",
     maxWidth: 520,
     borderRadius: 20,
     padding: 18,
     marginBottom: 14,
+    borderWidth: 1,
     shadowOffset: { width: 0, height: 10 },
     shadowOpacity: 0.16,
     shadowRadius: 18,
@@ -133,5 +163,18 @@ const styles = StyleSheet.create({
   },
   nome: { fontSize: 18, fontWeight: "700", marginBottom: 4 },
   email: { fontSize: 14, color: "#94a3b8" },
+  linkButton: {
+    width: "100%",
+    maxWidth: 520,
+    marginTop: 12,
+    borderRadius: 16,
+    paddingVertical: 16,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  linkText: {
+    fontSize: 16,
+    textAlign: "center",
+  },
   cardText: { fontSize: 16, textAlign: "center" },
 });
