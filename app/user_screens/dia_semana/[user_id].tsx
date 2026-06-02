@@ -1,4 +1,4 @@
-import { Link, router, useLocalSearchParams } from "expo-router";
+import { router, useLocalSearchParams } from "expo-router";
 import React, { useEffect, useState } from "react";
 import { FlatList, Pressable, StyleSheet, View } from "react-native";
 
@@ -116,11 +116,20 @@ export default function ExerciciosDia() {
               </ThemedText>
             </Pressable>
 
-            <Link href="/adm_home" dismissTo>
+            <Pressable
+              onPress={() =>
+                router.push({
+                  pathname: "/user_home",
+                  params: {
+                    user_id: user_id?.toString() ?? "",
+                  },
+                })
+              }
+            >
               <ThemedText type="defaultSemiBold" style={styles.cardText}>
                 Voltar para Home
               </ThemedText>
-            </Link>
+            </Pressable>
           </View>
         }
         renderItem={({ item }) => (
