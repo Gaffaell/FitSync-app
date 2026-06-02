@@ -15,6 +15,7 @@ import {
   ScrollView,
   StyleSheet,
   TouchableOpacity,
+  View,
 } from "react-native";
 
 import { ThemedText } from "@/components/themed-text";
@@ -152,14 +153,38 @@ export default function InformacoesAluno() {
           Informações de aluno
         </ThemedText>
 
-        <ThemedText>Nome: {user.nome}</ThemedText>
-        <ThemedText>Idade: {user.idade}</ThemedText>
-        <ThemedText>Email: {user.email}</ThemedText>
-        <ThemedText>Senha: {user.senha}</ThemedText>
-        <ThemedText>Altura: {user.altura}</ThemedText>
-        <ThemedText>Peso: {user.peso}</ThemedText>
-        <ThemedText>Sexo: {user.sexo}</ThemedText>
-        <ThemedText>Telefone: {user.telefone}</ThemedText>
+        <ThemedView style={styles.card}>
+          <View style={styles.infoContainer}>
+            <ThemedText style={styles.label}>
+              Nome: <ThemedText style={styles.value}>{user.nome}</ThemedText>
+            </ThemedText>
+
+            <ThemedText style={styles.label}>
+              Idade: <ThemedText style={styles.value}>{user.idade}</ThemedText>
+            </ThemedText>
+
+            <ThemedText style={styles.label}>
+              Email: <ThemedText style={styles.value}>{user.email}</ThemedText>
+            </ThemedText>
+            <ThemedText style={styles.label}>
+              Senha: <ThemedText style={styles.value}>{user.senha}</ThemedText>
+            </ThemedText>
+            <ThemedText style={styles.label}>
+              Altura:{" "}
+              <ThemedText style={styles.value}>{user.altura}</ThemedText>
+            </ThemedText>
+            <ThemedText style={styles.label}>
+              Peso: <ThemedText style={styles.value}>{user.peso}</ThemedText>
+            </ThemedText>
+            <ThemedText style={styles.label}>
+              Sexo: <ThemedText style={styles.value}>{user.sexo}</ThemedText>
+            </ThemedText>
+            <ThemedText style={styles.label}>
+              Telefone:{" "}
+              <ThemedText style={styles.value}>{user.telefone}</ThemedText>
+            </ThemedText>
+          </View>
+        </ThemedView>
 
         <ScrollView style={styles.treinoContainer}>
           <ThemedText type="title" style={styles.titleContainer}>
@@ -312,5 +337,29 @@ const styles = StyleSheet.create({
     fontSize: 18,
     fontWeight: "700",
     color: "#ffffff",
+  },
+  card: {
+    backgroundColor: "#111",
+    padding: 20,
+    borderRadius: 12,
+    marginBottom: 20,
+    borderWidth: 1,
+    borderColor: "#6b42c1",
+    justifyContent: "center", // 🔹 Centraliza verticalmente
+    alignItems: "center", // 🔹 Centraliza horizontalmente
+    minHeight: 250, // 🔹 Dá altura mínima para o conteúdo ficar no meio
+  },
+  infoContainer: {
+    alignItems: "center", // 🔹 Centraliza o texto dentro do card
+  },
+  label: {
+    color: "#aaa",
+    fontSize: 16,
+    marginBottom: 8,
+    textAlign: "center",
+  },
+  value: {
+    color: "#fff",
+    fontWeight: "600",
   },
 });
