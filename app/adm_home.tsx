@@ -1,60 +1,78 @@
 import { Link } from "expo-router";
-import { ScrollView, StyleSheet, useColorScheme } from "react-native";
+import { ScrollView, StyleSheet } from "react-native";
 
 import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
+import { useThemeColor } from "@/hooks/use-theme-color";
 
 export default function AdmScreen() {
-  const colorScheme = useColorScheme();
-  const cardBackground = colorScheme === "dark" ? "#111827" : "#ffffff";
-  const cardShadow = colorScheme === "dark" ? "#000" : "#0a7ea4";
-
-  const linkCardStyle = {
-    ...styles.card,
-    backgroundColor: cardBackground,
-    shadowColor: cardShadow,
-  };
+  const accentColor = useThemeColor({}, "accent");
+  const pageBackground = useThemeColor(
+    { light: "#F3F4FF", dark: "#020617" },
+    "background",
+  );
+  const cardColor = useThemeColor(
+    { light: "#FFFFFF", dark: "#111827" },
+    "background",
+  );
+  const textColor = useThemeColor(
+    { light: "#111827", dark: "#F8FAFC" },
+    "text",
+  );
+  const subtitleColor = useThemeColor(
+    { light: "#475569", dark: "#94A3B8" },
+    "text",
+  );
 
   return (
-    <ScrollView>
+    <ScrollView contentContainerStyle={styles.scrollView}>
       <ThemedView
-        style={styles.container}
-        lightColor="#edf6ff"
-        darkColor="#071014"
+        style={[styles.container, { backgroundColor: pageBackground }]}
       >
-        <ThemedText type="title" style={styles.heading}>
-          Bem vindo(a)
-        </ThemedText>
-        <ThemedText
-          type="subtitle"
-          lightColor="#4b6570"
-          darkColor="#9ca3af"
-          style={styles.subtitle}
-        >
-          Gerencie alunos, treinos e feedbacks com rapidez e estilo.
-        </ThemedText>
+        <ThemedView style={[styles.hero, { backgroundColor: accentColor }]}>
+          <ThemedText type="title" style={styles.heroTitle}>
+            Bem vindo(a)
+          </ThemedText>
+          <ThemedText style={[styles.heroSubtitle, { color: textColor }]}>
+            Gerencie alunos, treinos e feedbacks com rapidez e estilo.
+          </ThemedText>
+        </ThemedView>
 
         <Link
           href="/adm_screens/cadastrar_aluno"
           dismissTo
-          style={linkCardStyle}
+          style={[
+            styles.card,
+            {
+              backgroundColor: cardColor,
+              borderColor: accentColor,
+              shadowColor: accentColor,
+            },
+          ]}
         >
           <ThemedText
             type="defaultSemiBold"
-            lightColor="#0f4c81"
-            darkColor="#f8fafc"
-            style={styles.cardText}
+            style={[styles.cardText, { color: textColor }]}
           >
             Cadastrar aluno
           </ThemedText>
         </Link>
 
-        <Link href="/adm_screens/lista_alunos" dismissTo style={linkCardStyle}>
+        <Link
+          href="/adm_screens/lista_alunos"
+          dismissTo
+          style={[
+            styles.card,
+            {
+              backgroundColor: cardColor,
+              borderColor: accentColor,
+              shadowColor: accentColor,
+            },
+          ]}
+        >
           <ThemedText
             type="defaultSemiBold"
-            lightColor="#6b42c1"
-            darkColor="#c4b5fd"
-            style={styles.cardText}
+            style={[styles.cardText, { color: textColor }]}
           >
             Lista de alunos
           </ThemedText>
@@ -63,13 +81,18 @@ export default function AdmScreen() {
         <Link
           href="/adm_screens/cadastrar_exercicio"
           dismissTo
-          style={linkCardStyle}
+          style={[
+            styles.card,
+            {
+              backgroundColor: cardColor,
+              borderColor: accentColor,
+              shadowColor: accentColor,
+            },
+          ]}
         >
           <ThemedText
             type="defaultSemiBold"
-            lightColor="#d9730a"
-            darkColor="#fdba74"
-            style={styles.cardText}
+            style={[styles.cardText, { color: textColor }]}
           >
             Cadastrar exercício
           </ThemedText>
@@ -78,13 +101,18 @@ export default function AdmScreen() {
         <Link
           href="/adm_screens/lista_exercicios"
           dismissTo
-          style={linkCardStyle}
+          style={[
+            styles.card,
+            {
+              backgroundColor: cardColor,
+              borderColor: accentColor,
+              shadowColor: accentColor,
+            },
+          ]}
         >
           <ThemedText
             type="defaultSemiBold"
-            lightColor="#0a7ea4"
-            darkColor="#7dd3fc"
-            style={styles.cardText}
+            style={[styles.cardText, { color: textColor }]}
           >
             Lista de exercícios
           </ThemedText>
@@ -93,13 +121,18 @@ export default function AdmScreen() {
         <Link
           href="/adm_screens/lista_feedbacks"
           dismissTo
-          style={linkCardStyle}
+          style={[
+            styles.card,
+            {
+              backgroundColor: cardColor,
+              borderColor: accentColor,
+              shadowColor: accentColor,
+            },
+          ]}
         >
           <ThemedText
             type="defaultSemiBold"
-            lightColor="#d9730a"
-            darkColor="#fdba74"
-            style={styles.cardText}
+            style={[styles.cardText, { color: textColor }]}
           >
             Lista de feedbacks
           </ThemedText>
@@ -110,22 +143,37 @@ export default function AdmScreen() {
 }
 
 const styles = StyleSheet.create({
+  scrollView: {
+    paddingVertical: 24,
+  },
   container: {
     flex: 1,
     padding: 24,
     justifyContent: "flex-start",
     alignItems: "center",
   },
-  heading: {
-    marginTop: 72,
+  hero: {
+    width: "100%",
+    maxWidth: 520,
+    borderRadius: 24,
+    padding: 24,
+    marginBottom: 24,
+    shadowColor: "#8B5CF6",
+    shadowOffset: { width: 0, height: 14 },
+    shadowOpacity: 0.18,
+    shadowRadius: 22,
+    elevation: 6,
+  },
+  heroTitle: {
+    color: "#FFFFFF",
     marginBottom: 10,
     textAlign: "center",
   },
-  subtitle: {
+  heroSubtitle: {
+    color: "rgba(255,255,255,0.92)",
+    fontSize: 15,
+    lineHeight: 22,
     textAlign: "center",
-    marginBottom: 32,
-    lineHeight: 24,
-    maxWidth: 360,
   },
   card: {
     width: "100%",
@@ -138,19 +186,10 @@ const styles = StyleSheet.create({
     shadowOpacity: 0.16,
     shadowRadius: 18,
     elevation: 5,
+    borderWidth: 1,
   },
   cardText: {
     fontSize: 18,
     fontWeight: "700",
-    color: "#ffffff",
-  },
-  accentText: {
-    color: "#0a7ea4",
-  },
-  purpleText: {
-    color: "#8b5cf6",
-  },
-  orangeText: {
-    color: "#fb923c",
   },
 });

@@ -1,16 +1,9 @@
-import { Image } from "expo-image";
 import { router } from "expo-router";
-import {
-  Pressable,
-  StyleSheet,
-  TextInput,
-  View,
-  useColorScheme,
-} from "react-native";
+import { Pressable, StyleSheet, TextInput, View } from "react-native";
 
-import ParallaxScrollView from "@/components/parallax-scroll-view";
 import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
+import { useThemeColor } from "@/hooks/use-theme-color";
 import { initializeApp } from "firebase/app";
 import {
   collection,
@@ -49,8 +42,21 @@ export default function HomeScreen() {
   });
   const [message, setMessage] = useState("");
   const [loading, setLoading] = useState(false);
-  const colorScheme = useColorScheme();
-  const buttonBackground = colorScheme === "dark" ? "#2563eb" : "#007bff";
+  const accentColor = useThemeColor({}, "accent");
+  const buttonColor = useThemeColor({}, "button");
+  const pageBackground = useThemeColor(
+    { light: "#F3F4FF", dark: "#020617" },
+    "background",
+  );
+  const inputBackground = useThemeColor(
+    { light: "#F8FAFC", dark: "#111827" },
+    "background",
+  );
+  const inputTextColor = useThemeColor({}, "text");
+  const placeholderColor = useThemeColor(
+    { light: "#94A3B8", dark: "#94A3B8" },
+    "text",
+  );
 
   const handleLogin = async (role: "adm" | "usuario", data: LoginForm) => {
     setMessage("");
@@ -88,86 +94,123 @@ export default function HomeScreen() {
   };
 
   return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: "#A1CEDC", dark: "#1D3D47" }}
-      headerImage={
-        <Image
-          source={require("@/assets/images/partial-react-logo.png")}
-          style={styles.reactLogo}
-        />
-      }
-    >
-      <ThemedView style={{ display: "flex", flexDirection: "column", gap: 10 }}>
-        <Controller
-          control={control}
-          name="email"
-          render={({ field: { onChange, value } }) => (
-            <TextInput
-              placeholder="Email"
-              placeholderTextColor={"white"}
-              value={value}
-              onChangeText={onChange}
-              keyboardType="email-address"
-              autoCapitalize="none"
-              style={styles.input}
-            />
-          )}
-        />
-        <Controller
-          control={control}
-          name="senha"
-          render={({ field: { onChange, value } }) => (
-            <TextInput
-              placeholder="Senha"
-              placeholderTextColor={"white"}
-              value={value}
-              onChangeText={onChange}
-              secureTextEntry
-              style={styles.input}
-            />
-          )}
-        />
-
-        {message ? (
-          <View style={styles.messageBox}>
-            <ThemedText type="default" style={styles.messageText}>
-              {message}
-            </ThemedText>
-          </View>
-        ) : null}
-
-        <Pressable
-          disabled={loading}
-          onPress={handleSubmit((data) => handleLogin("adm", data))}
-          style={[styles.button, { backgroundColor: buttonBackground }]}
-        >
-          <ThemedText>
-            {loading ? "Verificando adm..." : "Login como adm"}
-          </ThemedText>
-        </Pressable>
-        <Pressable
-          disabled={loading}
-          onPress={handleSubmit((data) => handleLogin("usuario", data))}
-          style={[styles.button, { backgroundColor: buttonBackground }]}
-        >
-          <ThemedText>
-            {loading ? "Verificando usuário..." : "Login como usuário"}
-          </ThemedText>
-        </Pressable>
+    <ThemedView style={[styles.page, { backgroundColor: pageBackground }]}>
+      <ThemedView style={[styles.hero, { backgroundColor: accentColor }]}>
+        <ThemedText type="title" style={styles.heroTitle}>
+          Bem-vindo ao FitSync
+        </ThemedText>
+        <ThemedText style={styles.heroSubtitle}>
+          Acesse sua conta e acompanhe seu plano de treino com as cores do seu
+          novo tema.
+        </ThemedText>
       </ThemedView>
-    </ParallaxScrollView>
+
+      <Controller
+        control={control}
+        name="email"
+        render={({ field: { onChange, value } }) => (
+          <TextInput
+            placeholder="Email"
+            placeholderTextColor={placeholderColor}
+            value={value}
+            onChangeText={onChange}
+            keyboardType="email-address"
+            autoCapitalize="none"
+            style={[
+              styles.input,
+              {
+                backgroundColor: inputBackground,
+                borderColor: accentColor,
+                color: inputTextColor,
+              },
+            ]}
+          />
+        )}
+      />
+      <Controller
+        control={control}
+        name="senha"
+        render={({ field: { onChange, value } }) => (
+          <TextInput
+            placeholder="Senha"
+            placeholderTextColor={placeholderColor}
+            value={value}
+            onChangeText={onChange}
+            secureTextEntry
+            style={[
+              styles.input,
+              {
+                backgroundColor: inputBackground,
+                borderColor: accentColor,
+                color: inputTextColor,
+              },
+            ]}
+          />
+        )}
+      />
+
+      {message ? (
+        <View style={[styles.messageBox, { borderColor: accentColor }]}>
+          <ThemedText
+            type="default"
+            style={[styles.messageText, { color: inputTextColor }]}
+          >
+            {message}
+          </ThemedText>
+        </View>
+      ) : null}
+
+      <Pressable
+        disabled={loading}
+        onPress={handleSubmit((data) => handleLogin("adm", data))}
+        style={[styles.button, { backgroundColor: buttonColor }]}
+      >
+        <ThemedText style={styles.buttonText}>
+          {loading ? "Verificando adm..." : "Login como adm"}
+        </ThemedText>
+      </Pressable>
+      <Pressable
+        disabled={loading}
+        onPress={handleSubmit((data) => handleLogin("usuario", data))}
+        style={[styles.button, { backgroundColor: buttonColor }]}
+      >
+        <ThemedText style={styles.buttonText}>
+          {loading ? "Verificando usuário..." : "Login como usuário"}
+        </ThemedText>
+      </Pressable>
+    </ThemedView>
   );
 }
 
 const styles = StyleSheet.create({
-  titleContainer: {
-    flexDirection: "row",
+  page: {
+    flex: 1,
+    padding: 24,
+    justifyContent: "center",
     alignItems: "center",
-    gap: 8,
   },
-  stepContainer: {
-    gap: 8,
-    marginBottom: 8,
+  hero: {
+    width: "100%",
+    maxWidth: 520,
+    borderRadius: 24,
+    padding: 24,
+    marginBottom: 24,
+    shadowColor: "#8B5CF6",
+    shadowOffset: { width: 0, height: 14 },
+    shadowOpacity: 0.18,
+    shadowRadius: 22,
+    elevation: 6,
+  },
+  heroTitle: {
+    color: "#FFFFFF",
+    marginBottom: 10,
+    textAlign: "center",
+  },
+  heroSubtitle: {
+    color: "rgba(255,255,255,0.92)",
+    fontSize: 15,
+    lineHeight: 22,
+    textAlign: "center",
   },
   reactLogo: {
     height: 178,
@@ -177,25 +220,40 @@ const styles = StyleSheet.create({
     position: "absolute",
   },
   input: {
-    color: "#ffffff",
+    width: "100%",
+    maxWidth: 520,
     borderWidth: 1,
-    borderColor: "#ccc",
-    padding: 10,
-    borderRadius: 5,
-    marginBottom: 10,
+    padding: 14,
+    borderRadius: 16,
+    marginBottom: 16,
   },
   messageBox: {
-    padding: 10,
-    backgroundColor: "rgba(255,255,255,0.12)",
-    borderRadius: 5,
-    marginBottom: 10,
+    width: "100%",
+    maxWidth: 520,
+    padding: 14,
+    borderRadius: 16,
+    borderWidth: 1,
+    marginBottom: 16,
   },
   messageText: {
     color: "#fde68a",
   },
   button: {
-    padding: 10,
-    borderRadius: 5,
+    width: "100%",
+    maxWidth: 520,
+    borderRadius: 18,
+    paddingVertical: 16,
     alignItems: "center",
+    marginBottom: 12,
+    shadowColor: "#FB923C",
+    shadowOffset: { width: 0, height: 12 },
+    shadowOpacity: 0.22,
+    shadowRadius: 16,
+    elevation: 5,
+  },
+  buttonText: {
+    color: "#111827",
+    fontSize: 16,
+    fontWeight: "700",
   },
 });

@@ -1,9 +1,10 @@
 import { Link, router } from "expo-router";
+import React, { useState } from "react";
 import { Pressable, ScrollView, StyleSheet, TextInput } from "react-native";
 
 import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
-import React, { useState } from "react";
+import { useThemeColor } from "@/hooks/use-theme-color";
 
 import { initializeApp } from "firebase/app";
 import { addDoc, collection, getFirestore } from "firebase/firestore";
@@ -29,6 +30,26 @@ export default function CadastrarExercicio() {
     descricao: "",
   });
 
+  const accentColor = useThemeColor({}, "accent");
+  const buttonColor = useThemeColor({}, "button");
+  const pageBackground = useThemeColor(
+    { light: "#F3F4FF", dark: "#020617" },
+    "background",
+  );
+  const cardBackground = useThemeColor(
+    { light: "#FFFFFF", dark: "#111827" },
+    "background",
+  );
+  const textColor = useThemeColor({}, "text");
+  const inputBackground = useThemeColor(
+    { light: "#F8FAFC", dark: "#111827" },
+    "background",
+  );
+  const inputBorderColor = useThemeColor(
+    { light: "#E0E7FF", dark: "#334155" },
+    "tint",
+  );
+
   const handleChange = (name: string, value: string) => {
     setFormData({ ...formData, [name]: value });
   };
@@ -48,34 +69,87 @@ export default function CadastrarExercicio() {
   };
 
   return (
-    <ScrollView>
-      <ThemedView style={styles.container}>
-        <ThemedText type="title" style={styles.titleContainer}>
-          Cadastrar exercício
-        </ThemedText>
-        <ThemedView style={styles.card}>
-          <ThemedText type="defaultSemiBold" style={styles.fieldLabel}>
+    <ScrollView contentContainerStyle={styles.scrollView}>
+      <ThemedView
+        style={[styles.container, { backgroundColor: pageBackground }]}
+      >
+        <ThemedView style={[styles.hero, { backgroundColor: accentColor }]}>
+          <ThemedText type="title" style={styles.heroTitle}>
+            Cadastrar exercício
+          </ThemedText>
+          <ThemedText style={styles.heroSubtitle}>
+            Insira os dados do novo exercício e deixe o sistema pronto para uso.
+          </ThemedText>
+        </ThemedView>
+
+        <ThemedView
+          style={[
+            styles.card,
+            {
+              backgroundColor: cardBackground,
+              borderColor: accentColor,
+              shadowColor: accentColor,
+            },
+          ]}
+        >
+          <ThemedText
+            type="defaultSemiBold"
+            style={[styles.fieldLabel, { color: textColor }]}
+          >
             Nome
           </ThemedText>
           <TextInput
-            style={styles.input}
+            style={[
+              styles.input,
+              {
+                backgroundColor: inputBackground,
+                color: textColor,
+                borderColor: inputBorderColor,
+              },
+            ]}
             value={formData.nome}
             onChangeText={(text) => handleChange("nome", text)}
           />
-          <ThemedText type="defaultSemiBold" style={styles.fieldLabel}>
+
+          <ThemedText
+            type="defaultSemiBold"
+            style={[styles.fieldLabel, { color: textColor }]}
+          >
             Descrição
           </ThemedText>
           <TextInput
-            style={styles.input}
+            style={[
+              styles.input,
+              {
+                backgroundColor: inputBackground,
+                color: textColor,
+                borderColor: inputBorderColor,
+              },
+            ]}
             value={formData.descricao}
             onChangeText={(text) => handleChange("descricao", text)}
+            multiline
+            numberOfLines={4}
           />
         </ThemedView>
-        <Pressable onPress={handleSubmit} style={styles.button}>
-          <ThemedText>Salvar</ThemedText>
+
+        <Pressable
+          onPress={handleSubmit}
+          style={[
+            styles.button,
+            { backgroundColor: buttonColor, shadowColor: buttonColor },
+          ]}
+        >
+          <ThemedText type="defaultSemiBold" style={styles.buttonText}>
+            Salvar
+          </ThemedText>
         </Pressable>
-        <Link href="/adm_home" dismissTo>
-          <ThemedText type="defaultSemiBold" style={styles.cardText}>
+
+        <Link href="/adm_home" dismissTo style={styles.linkButton}>
+          <ThemedText
+            type="defaultSemiBold"
+            style={[styles.linkText, { color: accentColor }]}
+          >
             Voltar para Home
           </ThemedText>
         </Link>
@@ -85,25 +159,40 @@ export default function CadastrarExercicio() {
 }
 
 const styles = StyleSheet.create({
-  titleContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 8,
-    padding: 10,
+  scrollView: {
+    paddingVertical: 24,
   },
   container: {
     flex: 1,
+    padding: 24,
+    justifyContent: "flex-start",
     alignItems: "center",
-    justifyContent: "center",
-    padding: 20,
   },
-  stepContainer: {
-    gap: 8,
-    marginBottom: 8,
+  hero: {
+    width: "100%",
+    maxWidth: 520,
+    borderRadius: 24,
+    padding: 24,
+    marginBottom: 24,
+    shadowColor: "#8B5CF6",
+    shadowOffset: { width: 0, height: 14 },
+    shadowOpacity: 0.18,
+    shadowRadius: 22,
+    elevation: 6,
+  },
+  heroTitle: {
+    color: "#FFFFFF",
+    marginBottom: 10,
+    textAlign: "center",
+  },
+  heroSubtitle: {
+    color: "rgba(255,255,255,0.92)",
+    fontSize: 15,
+    lineHeight: 22,
+    textAlign: "center",
   },
   fieldLabel: {
     marginBottom: 8,
-    color: "#64748b",
     fontSize: 14,
   },
   card: {
@@ -112,35 +201,52 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     padding: 20,
     marginBottom: 20,
+    borderWidth: 1,
     shadowOffset: { width: 0, height: 10 },
     shadowOpacity: 0.16,
     shadowRadius: 18,
     elevation: 5,
   },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: "absolute",
-  },
   input: {
-    color: "#ffffff",
+    width: "100%",
+    borderRadius: 16,
+    paddingHorizontal: 16,
+    paddingVertical: 14,
+    marginBottom: 16,
+    fontSize: 16,
     borderWidth: 1,
-    borderColor: "#ccc",
-    padding: 10,
-    borderRadius: 5,
-    marginBottom: 10,
   },
   button: {
-    backgroundColor: "#007bff",
-    padding: 10,
-    borderRadius: 5,
+    width: "100%",
+    maxWidth: 520,
+    borderRadius: 16,
+    paddingVertical: 16,
     alignItems: "center",
+    marginBottom: 12,
+    shadowOffset: { width: 0, height: 12 },
+    shadowOpacity: 0.22,
+    shadowRadius: 16,
+    elevation: 5,
   },
-  link: {
-    marginTop: 15,
-    paddingVertical: 15,
+  buttonText: {
+    color: "#FFFFFF",
+    fontSize: 16,
+    fontWeight: "700",
   },
-  cardText: { fontSize: 16, textAlign: "center" },
+  linkButton: {
+    width: "100%",
+    maxWidth: 520,
+    borderRadius: 16,
+    paddingVertical: 16,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  linkText: {
+    fontSize: 16,
+    textAlign: "center",
+  },
+  cardText: {
+    fontSize: 16,
+    textAlign: "center",
+  },
 });

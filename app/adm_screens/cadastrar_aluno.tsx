@@ -1,14 +1,10 @@
-import { ThemedText } from "@/components/themed-text";
-import { ThemedView } from "@/components/themed-view";
 import { Link, router } from "expo-router";
 import React, { useState } from "react";
-import {
-  Pressable,
-  ScrollView,
-  StyleSheet,
-  TextInput,
-  useColorScheme,
-} from "react-native";
+import { Pressable, ScrollView, StyleSheet, TextInput } from "react-native";
+
+import { ThemedText } from "@/components/themed-text";
+import { ThemedView } from "@/components/themed-view";
+import { useThemeColor } from "@/hooks/use-theme-color";
 
 // Firebase
 import { initializeApp } from "firebase/app";
@@ -40,11 +36,26 @@ export default function CadastroAluno() {
     email: "",
     senha: "",
   });
-  const theme = useColorScheme();
-  const inputBackground = theme === "dark" ? "#1f2937" : "#f8fafc";
-  const inputColor = theme === "dark" ? "#f8fafc" : "#0f172a";
-  const cardBackground = theme === "dark" ? "#111827" : "#ffffff";
-  const shadowColor = theme === "dark" ? "#000" : "#0a7ea4";
+
+  const accentColor = useThemeColor({}, "accent");
+  const buttonColor = useThemeColor({}, "button");
+  const pageBackground = useThemeColor(
+    { light: "#F3F4FF", dark: "#020617" },
+    "background",
+  );
+  const cardBackground = useThemeColor(
+    { light: "#FFFFFF", dark: "#111827" },
+    "background",
+  );
+  const textColor = useThemeColor({}, "text");
+  const inputBackground = useThemeColor(
+    { light: "#F8FAFC", dark: "#111827" },
+    "background",
+  );
+  const inputBorderColor = useThemeColor(
+    { light: "#E0E7FF", dark: "#334155" },
+    "tint",
+  );
 
   const handleChange = (name: string, value: string) => {
     setFormData({ ...formData, [name]: value });
@@ -70,117 +81,206 @@ export default function CadastroAluno() {
     }
   };
 
-  const cardStyle = {
-    ...styles.card,
-    backgroundColor: cardBackground,
-    shadowColor,
-  };
-  const inputStyle = {
-    ...styles.input,
-    backgroundColor: inputBackground,
-    color: inputColor,
-  };
-  const primaryButtonStyle = {
-    ...styles.button,
-    ...styles.primaryButton,
-  };
-
   return (
     <ScrollView contentContainerStyle={styles.scrollContainer}>
       <ThemedView
-        style={styles.container}
-        lightColor="#edf6ff"
-        darkColor="#071014"
+        style={[styles.container, { backgroundColor: pageBackground }]}
       >
-        <ThemedText type="title" style={styles.heading}>
-          Cadastrar aluno
-        </ThemedText>
-        <ThemedText
-          type="subtitle"
-          lightColor="#4b6570"
-          darkColor="#9ca3af"
-          style={styles.subtitle}
-        >
-          Adicione um aluno novo ao sistema e comece a personalizar os treinos.
-        </ThemedText>
+        <ThemedView style={[styles.hero, { backgroundColor: accentColor }]}>
+          <ThemedText type="title" style={styles.heroTitle}>
+            Cadastrar aluno
+          </ThemedText>
+          <ThemedText
+            style={[styles.heroSubtitle, { color: "rgba(255,255,255,0.92)" }]}
+          >
+            Adicione um aluno novo ao sistema e comece a personalizar os
+            treinos.
+          </ThemedText>
+        </ThemedView>
 
-        <ThemedView style={cardStyle}>
-          <ThemedText type="defaultSemiBold" style={styles.fieldLabel}>
+        <ThemedView
+          style={[
+            styles.card,
+            {
+              backgroundColor: cardBackground,
+              borderColor: accentColor,
+              shadowColor: accentColor,
+            },
+          ]}
+        >
+          <ThemedText
+            type="defaultSemiBold"
+            style={[styles.fieldLabel, { color: textColor }]}
+          >
             Nome
           </ThemedText>
           <TextInput
-            style={inputStyle}
+            style={[
+              styles.input,
+              {
+                backgroundColor: inputBackground,
+                color: textColor,
+                borderColor: inputBorderColor,
+              },
+            ]}
             value={formData.nome}
             onChangeText={(text) => handleChange("nome", text)}
           />
-          <ThemedText type="defaultSemiBold" style={styles.fieldLabel}>
+
+          <ThemedText
+            type="defaultSemiBold"
+            style={[styles.fieldLabel, { color: textColor }]}
+          >
             Idade
           </ThemedText>
           <TextInput
-            style={inputStyle}
+            style={[
+              styles.input,
+              {
+                backgroundColor: inputBackground,
+                color: textColor,
+                borderColor: inputBorderColor,
+              },
+            ]}
             value={formData.idade}
             onChangeText={(text) => handleChange("idade", text)}
             keyboardType="numeric"
           />
-          <ThemedText type="defaultSemiBold" style={styles.fieldLabel}>
+
+          <ThemedText
+            type="defaultSemiBold"
+            style={[styles.fieldLabel, { color: textColor }]}
+          >
             Sexo
           </ThemedText>
           <TextInput
-            style={inputStyle}
+            style={[
+              styles.input,
+              {
+                backgroundColor: inputBackground,
+                color: textColor,
+                borderColor: inputBorderColor,
+              },
+            ]}
             value={formData.sexo}
             onChangeText={(text) => handleChange("sexo", text)}
           />
-          <ThemedText type="defaultSemiBold" style={styles.fieldLabel}>
+
+          <ThemedText
+            type="defaultSemiBold"
+            style={[styles.fieldLabel, { color: textColor }]}
+          >
             Peso
           </ThemedText>
           <TextInput
-            style={inputStyle}
+            style={[
+              styles.input,
+              {
+                backgroundColor: inputBackground,
+                color: textColor,
+                borderColor: inputBorderColor,
+              },
+            ]}
             value={formData.peso}
             onChangeText={(text) => handleChange("peso", text)}
           />
-          <ThemedText type="defaultSemiBold" style={styles.fieldLabel}>
+
+          <ThemedText
+            type="defaultSemiBold"
+            style={[styles.fieldLabel, { color: textColor }]}
+          >
             Telefone
           </ThemedText>
           <TextInput
-            style={inputStyle}
+            style={[
+              styles.input,
+              {
+                backgroundColor: inputBackground,
+                color: textColor,
+                borderColor: inputBorderColor,
+              },
+            ]}
             value={formData.telefone}
             onChangeText={(text) => handleChange("telefone", text)}
             keyboardType="phone-pad"
           />
-          <ThemedText type="defaultSemiBold" style={styles.fieldLabel}>
+
+          <ThemedText
+            type="defaultSemiBold"
+            style={[styles.fieldLabel, { color: textColor }]}
+          >
             Altura
           </ThemedText>
           <TextInput
-            style={inputStyle}
+            style={[
+              styles.input,
+              {
+                backgroundColor: inputBackground,
+                color: textColor,
+                borderColor: inputBorderColor,
+              },
+            ]}
             value={formData.altura}
             onChangeText={(text) => handleChange("altura", text)}
           />
-          <ThemedText type="defaultSemiBold" style={styles.fieldLabel}>
+
+          <ThemedText
+            type="defaultSemiBold"
+            style={[styles.fieldLabel, { color: textColor }]}
+          >
             E-mail
           </ThemedText>
           <TextInput
-            style={inputStyle}
+            style={[
+              styles.input,
+              {
+                backgroundColor: inputBackground,
+                color: textColor,
+                borderColor: inputBorderColor,
+              },
+            ]}
             value={formData.email}
             onChangeText={(text) => handleChange("email", text)}
           />
-          <ThemedText type="defaultSemiBold" style={styles.fieldLabel}>
+
+          <ThemedText
+            type="defaultSemiBold"
+            style={[styles.fieldLabel, { color: textColor }]}
+          >
             Senha
           </ThemedText>
           <TextInput
-            style={inputStyle}
+            style={[
+              styles.input,
+              {
+                backgroundColor: inputBackground,
+                color: textColor,
+                borderColor: inputBorderColor,
+              },
+            ]}
             value={formData.senha}
             onChangeText={(text) => handleChange("senha", text)}
             secureTextEntry
           />
         </ThemedView>
 
-        <Pressable onPress={handleSubmit} style={primaryButtonStyle}>
+        <Pressable
+          onPress={handleSubmit}
+          style={[
+            styles.button,
+            { backgroundColor: buttonColor, shadowColor: buttonColor },
+          ]}
+        >
           <ThemedText type="defaultSemiBold" style={styles.buttonText}>
             Cadastrar
           </ThemedText>
         </Pressable>
-        <Link href="/adm_home" dismissTo>
-          <ThemedText type="defaultSemiBold" style={styles.cardText}>
+
+        <Link href="/adm_home" dismissTo style={styles.linkButton}>
+          <ThemedText
+            type="defaultSemiBold"
+            style={[styles.linkText, { color: accentColor }]}
+          >
             Voltar para Home
           </ThemedText>
         </Link>
@@ -190,12 +290,37 @@ export default function CadastroAluno() {
 }
 
 const styles = StyleSheet.create({
-  scrollContainer: { flexGrow: 1 },
+  scrollContainer: {
+    flexGrow: 1,
+  },
   container: {
     flex: 1,
     padding: 24,
     alignItems: "center",
     justifyContent: "flex-start",
+  },
+  hero: {
+    width: "100%",
+    maxWidth: 520,
+    borderRadius: 24,
+    padding: 24,
+    marginBottom: 24,
+    shadowColor: "#8B5CF6",
+    shadowOffset: { width: 0, height: 14 },
+    shadowOpacity: 0.18,
+    shadowRadius: 22,
+    elevation: 6,
+  },
+  heroTitle: {
+    color: "#FFFFFF",
+    marginBottom: 10,
+    textAlign: "center",
+  },
+  heroSubtitle: {
+    color: "rgba(255,255,255,0.92)",
+    fontSize: 15,
+    lineHeight: 22,
+    textAlign: "center",
   },
   heading: {
     marginTop: 56,
@@ -214,6 +339,7 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     padding: 20,
     marginBottom: 20,
+    borderWidth: 1,
     shadowOffset: { width: 0, height: 10 },
     shadowOpacity: 0.16,
     shadowRadius: 18,
@@ -221,7 +347,6 @@ const styles = StyleSheet.create({
   },
   fieldLabel: {
     marginBottom: 8,
-    color: "#64748b",
     fontSize: 14,
   },
   input: {
@@ -231,6 +356,7 @@ const styles = StyleSheet.create({
     paddingVertical: 14,
     marginBottom: 16,
     fontSize: 16,
+    borderWidth: 1,
   },
   button: {
     width: "100%",
@@ -239,21 +365,26 @@ const styles = StyleSheet.create({
     paddingVertical: 16,
     alignItems: "center",
     marginBottom: 12,
-  },
-  primaryButton: {
-    backgroundColor: "#6b42c1",
+    shadowOffset: { width: 0, height: 12 },
+    shadowOpacity: 0.22,
+    shadowRadius: 16,
+    elevation: 5,
   },
   buttonText: {
-    color: "#ffffff",
+    color: "#FFFFFF",
     fontSize: 16,
     fontWeight: "700",
   },
-  link: {
-    marginTop: 12,
-    paddingVertical: 12,
+  linkButton: {
+    width: "100%",
+    maxWidth: 520,
+    borderRadius: 16,
+    paddingVertical: 16,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  linkText: {
     fontSize: 16,
     textAlign: "center",
-    color: "#6b42c1",
   },
-  cardText: { fontSize: 16, textAlign: "center" },
 });

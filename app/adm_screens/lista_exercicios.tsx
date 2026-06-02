@@ -4,12 +4,9 @@ import { Link, router } from "expo-router";
 import { initializeApp } from "firebase/app";
 import { collection, getDocs, getFirestore } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
-import {
-  FlatList,
-  StyleSheet,
-  TouchableOpacity,
-  useColorScheme,
-} from "react-native";
+import { FlatList, StyleSheet, TouchableOpacity } from "react-native";
+
+import { useThemeColor } from "@/hooks/use-theme-color";
 
 const firebaseConfig = {
   apiKey: "AIzaSyAiRZdjS62ZR3vjBIg4RJ5v0YyxxCWytkk",
@@ -43,53 +40,75 @@ export default function ListaExercicios() {
   useEffect(() => {
     fetchExercicios();
   }, []);
-  const theme = useColorScheme();
-  const containerBg = theme === "dark" ? "#071014" : "#edf6ff";
-  const cardBg = theme === "dark" ? "#111827" : "#ffffff";
-  const cardShadow = theme === "dark" ? "#000" : "#0a7ea4";
-  const titleColor = theme === "dark" ? "#f8fafc" : "#0f4c81";
-  const subtitleColor = theme === "dark" ? "#94a3b8" : "#4b6570";
+
+  const accentColor = useThemeColor({}, "accent");
+  const buttonColor = useThemeColor({}, "button");
+  const pageBackground = useThemeColor(
+    { light: "#F3F4FF", dark: "#020617" },
+    "background",
+  );
+  const cardBackground = useThemeColor(
+    { light: "#FFFFFF", dark: "#111827" },
+    "background",
+  );
+  const textColor = useThemeColor({}, "text");
+  const subtitleColor = useThemeColor(
+    { light: "#475569", dark: "#94A3B8" },
+    "text",
+  );
+  const itemStyle = {
+    ...styles.item,
+    backgroundColor: cardBackground,
+    borderColor: accentColor,
+    shadowColor: accentColor,
+  };
 
   return (
-    <ThemedView style={[styles.container, { backgroundColor: containerBg }]}>
+    <ThemedView style={[styles.container, { backgroundColor: pageBackground }]}>
       <FlatList
         data={exercicios}
         keyExtractor={(item) => item.id}
+        style={styles.flatList}
         contentContainerStyle={styles.list}
         ListHeaderComponent={
           <>
-            <ThemedText
-              type="title"
-              style={[styles.heading, { color: titleColor }]}
-            >
-              Exercícios
-            </ThemedText>
-            <ThemedText
-              type="subtitle"
-              style={[styles.subtitle, { color: subtitleColor }]}
-            >
-              Liste e gerencie os exercícios disponíveis.
-            </ThemedText>
+            <ThemedView style={[styles.hero, { backgroundColor: accentColor }]}>
+              <ThemedText type="title" style={styles.heroTitle}>
+                Exercícios
+              </ThemedText>
+              <ThemedText style={styles.heroSubtitle}>
+                Liste e gerencie os exercícios disponíveis com um visual mais
+                claro.
+              </ThemedText>
+            </ThemedView>
           </>
         }
         ListFooterComponent={
-          <Link href="/adm_home" dismissTo>
-            <ThemedText type="defaultSemiBold" style={styles.cardText}>
+          <Link href="/adm_home" dismissTo style={styles.linkButton}>
+            <ThemedText
+              type="defaultSemiBold"
+              style={[styles.linkText, { color: accentColor }]}
+            >
               Voltar para Home
             </ThemedText>
           </Link>
         }
         renderItem={({ item }) => (
           <TouchableOpacity
-            style={styles.item}
+            style={itemStyle}
             onPress={() =>
               router.push(`/adm_screens/editar_exercicio/${item.id}`)
             }
           >
-            <ThemedText type="defaultSemiBold" style={styles.title}>
-              {item.nome}
+            <ThemedText
+              type="defaultSemiBold"
+              style={[styles.title, { color: textColor }]}
+            >
+              Nome: {item.nome}
             </ThemedText>
-            <ThemedText style={styles.cardText}>{item.descricao}</ThemedText>
+            <ThemedText style={[styles.cardText, { color: subtitleColor }]}>
+              Descrição: {item.descricao}
+            </ThemedText>
           </TouchableOpacity>
         )}
       />
@@ -105,8 +124,31 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "flex-start",
   },
+  hero: {
+    width: "100%",
+    maxWidth: 520,
+    borderRadius: 24,
+    padding: 24,
+    marginBottom: 24,
+    shadowColor: "#8B5CF6",
+    shadowOffset: { width: 0, height: 14 },
+    shadowOpacity: 0.18,
+    shadowRadius: 22,
+    elevation: 6,
+  },
+  heroTitle: {
+    color: "#FFFFFF",
+    marginBottom: 10,
+    textAlign: "center",
+  },
+  heroSubtitle: {
+    color: "rgba(255,255,255,0.92)",
+    fontSize: 15,
+    lineHeight: 22,
+    textAlign: "center",
+  },
   heading: {
-    marginTop: 56,
+    marginTop: 0,
     marginBottom: 8,
     textAlign: "center",
   },
@@ -115,6 +157,9 @@ const styles = StyleSheet.create({
     lineHeight: 24,
     maxWidth: 360,
     textAlign: "center",
+  },
+  flatList: {
+    width: "100%",
   },
   list: {
     width: "100%",
@@ -126,11 +171,11 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     padding: 18,
     marginBottom: 14,
+    borderWidth: 1,
     shadowOffset: { width: 0, height: 10 },
     shadowOpacity: 0.16,
     shadowRadius: 18,
     elevation: 5,
-    backgroundColor: "#2c1849",
   },
   title: {
     fontSize: 18,
