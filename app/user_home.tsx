@@ -1,12 +1,8 @@
-import {
-  Pressable,
-  ScrollView,
-  StyleSheet,
-  useColorScheme,
-} from "react-native";
+import { Pressable, ScrollView, StyleSheet } from "react-native";
 
 import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
+import { useThemeColor } from "@/hooks/use-theme-color";
 import { router, useLocalSearchParams } from "expo-router";
 
 const weekDays = [
@@ -21,32 +17,41 @@ const weekDays = [
 
 export default function ExerciciosSemana() {
   const { user_id } = useLocalSearchParams<{ user_id: string }>();
-  const colorScheme = useColorScheme();
-  const cardBackground = colorScheme === "dark" ? "#111827" : "#ffffff";
-  const cardShadow = colorScheme === "dark" ? "#000" : "#0a7ea4";
+  const accentColor = useThemeColor({}, "accent");
+  const buttonColor = useThemeColor({}, "button");
+  const cardColor = useThemeColor(
+    { light: "#FFFFFF", dark: "#111827" },
+    "background",
+  );
+  const pageBackground = useThemeColor(
+    { light: "#F3F4FF", dark: "#020617" },
+    "background",
+  );
+  const textColor = useThemeColor(
+    { light: "#111827", dark: "#F8FAFC" },
+    "text",
+  );
   const currentUserId = user_id ?? "";
 
   return (
-    <ScrollView>
+    <ScrollView contentContainerStyle={styles.scrollView}>
       <ThemedView
-        style={styles.container}
-        lightColor="#edf6ff"
-        darkColor="#071014"
+        style={[styles.container, { backgroundColor: pageBackground }]}
       >
-        <ThemedText type="title" style={styles.heading}>
-          Plano de treinos
-        </ThemedText>
-        <ThemedText
-          type="subtitle"
-          lightColor="#4b6570"
-          darkColor="#9ca3af"
-          style={styles.subtitle}
-        >
-          Escolha o dia da semana para ver os exercícios planejados e começar
-          seu treino com foco.
-        </ThemedText>
+        <ThemedView style={[styles.hero, { backgroundColor: accentColor }]}>
+          <ThemedText type="title" style={styles.heroTitle}>
+            Plano de treinos
+          </ThemedText>
+          <ThemedText style={styles.heroSubtitle}>
+            Escolha o dia da semana para ver os exercícios planejados e começar
+            seu treino com foco.
+          </ThemedText>
+        </ThemedView>
 
-        <ThemedText type="default" style={styles.userIdText}>
+        <ThemedText
+          type="default"
+          style={[styles.userIdText, { color: textColor }]}
+        >
           {currentUserId
             ? `ID do usuário: ${currentUserId}`
             : "Usuário não identificado. Faça login novamente."}
@@ -68,16 +73,19 @@ export default function ExerciciosSemana() {
               })
             }
             key={day.label}
-            style={[
+            style={({ pressed }) => [
               styles.card,
-              { backgroundColor: cardBackground, shadowColor: cardShadow },
+              {
+                backgroundColor: cardColor,
+                borderColor: accentColor,
+                shadowColor: accentColor,
+                opacity: pressed || !currentUserId ? 0.85 : 1,
+              },
             ]}
           >
             <ThemedText
               type="defaultSemiBold"
-              lightColor={day.color}
-              darkColor={day.color}
-              style={styles.cardText}
+              style={[styles.cardText, { color: accentColor }]}
             >
               {day.label}
             </ThemedText>
@@ -89,14 +97,39 @@ export default function ExerciciosSemana() {
 }
 
 const styles = StyleSheet.create({
+  scrollView: {
+    paddingVertical: 24,
+  },
   container: {
     flex: 1,
     padding: 24,
     justifyContent: "flex-start",
     alignItems: "center",
   },
+  hero: {
+    width: "100%",
+    maxWidth: 520,
+    borderRadius: 24,
+    padding: 24,
+    marginBottom: 24,
+    shadowColor: "#8B5CF6",
+    shadowOffset: { width: 0, height: 14 },
+    shadowOpacity: 0.18,
+    shadowRadius: 22,
+    elevation: 6,
+  },
+  heroTitle: {
+    color: "#FFFFFF",
+    marginBottom: 10,
+    textAlign: "center",
+  },
+  heroSubtitle: {
+    color: "rgba(255,255,255,0.92)",
+    fontSize: 15,
+    lineHeight: 22,
+    textAlign: "center",
+  },
   heading: {
-    marginTop: 72,
     marginBottom: 10,
     textAlign: "center",
   },
@@ -113,6 +146,7 @@ const styles = StyleSheet.create({
     paddingVertical: 18,
     paddingHorizontal: 20,
     marginBottom: 16,
+    borderWidth: 1,
     shadowOffset: { width: 0, height: 10 },
     shadowOpacity: 0.16,
     shadowRadius: 18,
@@ -121,12 +155,28 @@ const styles = StyleSheet.create({
   cardText: {
     fontSize: 18,
     fontWeight: "700",
-    color: "#ffffff",
   },
   userIdText: {
     marginBottom: 16,
-    color: "#e2e8f0",
     textAlign: "center",
+  },
+  feedbackButton: {
+    width: "100%",
+    maxWidth: 520,
+    borderRadius: 18,
+    paddingVertical: 16,
+    paddingHorizontal: 24,
+    alignItems: "center",
+    justifyContent: "center",
+    shadowColor: "#FB923C",
+    shadowOffset: { width: 0, height: 12 },
+    shadowOpacity: 0.22,
+    shadowRadius: 16,
+    elevation: 5,
+  },
+  feedbackButtonText: {
+    color: "#111827",
+    fontSize: 16,
   },
   homeCard: {
     marginTop: 12,

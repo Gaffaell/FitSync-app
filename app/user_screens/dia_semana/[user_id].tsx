@@ -4,6 +4,7 @@ import { FlatList, Pressable, StyleSheet, View } from "react-native";
 
 import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
+import { useThemeColor } from "@/hooks/use-theme-color";
 import { initializeApp } from "firebase/app";
 import {
   collection,
@@ -30,6 +31,21 @@ const db = getFirestore(app);
 
 export default function ExerciciosDia() {
   const { dia, user_id } = useLocalSearchParams();
+  const accentColor = useThemeColor({}, "accent");
+  const buttonColor = useThemeColor({}, "button");
+  const cardColor = useThemeColor(
+    { light: "#FFFFFF", dark: "#111827" },
+    "background",
+  );
+  const pageBackground = useThemeColor(
+    { light: "#F3F4F6", dark: "#0F172A" },
+    "background",
+  );
+  const textColor = useThemeColor(
+    { light: "#111827", dark: "#F8FAFC" },
+    "text",
+  );
+
   const [treino, setTreino] = useState<any[]>([]);
   const [exercicio, setExercicio] = useState<any>(null);
 
@@ -87,20 +103,26 @@ export default function ExerciciosDia() {
   }, [dia, user_id]);
 
   return (
-    <ThemedView style={styles.container}>
+    <ThemedView style={[styles.container, { backgroundColor: pageBackground }]}>
       <FlatList
         data={treino}
         keyExtractor={(item) => item.id}
         contentContainerStyle={styles.flatListContent}
         ListHeaderComponent={
-          <ThemedText type="title" style={styles.title}>
-            Exercicios do dia
-          </ThemedText>
+          <ThemedView style={[styles.hero, { backgroundColor: accentColor }]}>
+            <ThemedText type="title" style={styles.heroTitle}>
+              Exercícios do dia
+            </ThemedText>
+            <ThemedText style={styles.heroSubtitle}>
+              Veja seu treino de hoje e envie um feedback direto para o
+              professor.
+            </ThemedText>
+          </ThemedView>
         }
         ListFooterComponent={
           <View style={styles.footer}>
             <Pressable
-              style={styles.button_2}
+              style={[styles.feedbackButton, { backgroundColor: buttonColor }]}
               onPress={() =>
                 router.push({
                   pathname: "/user_screens/feedback/[user_id]",
@@ -111,8 +133,11 @@ export default function ExerciciosDia() {
                 })
               }
             >
-              <ThemedText style={{ color: "black" }}>
-                Envie a sua experiência do treino para o professor!
+              <ThemedText
+                type="defaultSemiBold"
+                style={styles.feedbackButtonText}
+              >
+                Envie sua experiência do treino
               </ThemedText>
             </Pressable>
 
@@ -126,22 +151,34 @@ export default function ExerciciosDia() {
                 })
               }
             >
-              <ThemedText type="defaultSemiBold" style={styles.cardText}>
+              <ThemedText
+                type="defaultSemiBold"
+                style={[styles.cardText, { color: accentColor }]}
+              >
                 Voltar para Home
               </ThemedText>
             </Pressable>
           </View>
         }
         renderItem={({ item }) => (
-          <ThemedView style={styles.item}>
-            <ThemedText type="defaultSemiBold">{item.nome}</ThemedText>
-            <ThemedText type="defaultSemiBold">{item.descricao}</ThemedText>
-            <ThemedText type="default">Séries: {item.series}</ThemedText>
-            <ThemedText type="default">
-              Repetições: {item.repeticoes}
+          <ThemedView style={[styles.item, { backgroundColor: cardColor }]}>
+            <ThemedText
+              type="defaultSemiBold"
+              style={[styles.itemTitle, { color: textColor }]}
+            >
+              Nome: {item.nome}
             </ThemedText>
+            <ThemedText type="defaultSemiBold" style={styles.itemTitle}>
+              Descrição: {item.descricao}
+            </ThemedText>
+            <View style={styles.statsRow}>
+              <ThemedText type="default">Séries: {item.series}</ThemedText>
+              <ThemedText type="default">
+                Repetições: {item.repeticoes}
+              </ThemedText>
+            </View>
             <ThemedText type="default">Carga: {item.carga}</ThemedText>
-            <ThemedText type="default">
+            <ThemedText type="default" style={styles.exerciseId}>
               ID do Exercício: {item.id_exercicio}
             </ThemedText>
           </ThemedView>
@@ -163,11 +200,35 @@ const styles = StyleSheet.create({
   },
   flatListContent: {
     alignItems: "center",
-    paddingBottom: 20,
+    paddingBottom: 30,
+  },
+  hero: {
+    width: "100%",
+    maxWidth: 520,
+    borderRadius: 24,
+    padding: 24,
+    marginBottom: 20,
+    shadowColor: "#8B5CF6",
+    shadowOffset: { width: 0, height: 14 },
+    shadowOpacity: 0.18,
+    shadowRadius: 22,
+    elevation: 5,
+  },
+  heroTitle: {
+    color: "#FFFFFF",
+    marginBottom: 10,
+    textAlign: "center",
+  },
+  heroSubtitle: {
+    color: "rgba(255,255,255,0.92)",
+    fontSize: 15,
+    lineHeight: 22,
+    textAlign: "center",
   },
   title: {
     marginBottom: 24,
     textAlign: "center",
+    color: "#0F172A",
   },
   footer: {
     width: "100%",
@@ -177,31 +238,57 @@ const styles = StyleSheet.create({
   },
   emptyText: {
     marginTop: 12,
-    color: "#9ca3af",
+    color: "#64748B",
     textAlign: "center",
-  },
-  link: {
-    marginTop: 15,
-    paddingVertical: 15,
   },
   item: {
     width: "100%",
     maxWidth: 520,
-    borderRadius: 20,
-    padding: 18,
-    marginBottom: 14,
-    shadowOffset: { width: 0, height: 10 },
-    shadowOpacity: 0.16,
-    shadowRadius: 18,
+    borderRadius: 24,
+    padding: 20,
+    marginBottom: 16,
+    shadowColor: "#8B5CF6",
+    shadowOffset: { width: 0, height: 12 },
+    shadowOpacity: 0.14,
+    shadowRadius: 20,
     elevation: 5,
-    backgroundColor: "#2c1849",
   },
-  button_2: {
-    backgroundColor: "yellow",
+  itemTitle: {
+    fontSize: 18,
+    marginBottom: 8,
+  },
+  itemSubtitle: {
+    fontSize: 15,
+    marginBottom: 12,
+    color: "#6B7280",
+  },
+  statsRow: {
+    flexDirection: "row",
+    justifyContent: "space-between",
     marginBottom: 10,
-    padding: 10,
-    borderRadius: 5,
+  },
+  exerciseId: {
+    color: "#64748B",
+    marginTop: 10,
+  },
+  feedbackButton: {
+    width: "100%",
+    maxWidth: 520,
+    borderRadius: 16,
+    paddingVertical: 16,
+    paddingHorizontal: 24,
+    marginBottom: 12,
     alignItems: "center",
+    justifyContent: "center",
+    shadowColor: "#FB923C",
+    shadowOffset: { width: 0, height: 12 },
+    shadowOpacity: 0.22,
+    shadowRadius: 16,
+    elevation: 5,
+  },
+  feedbackButtonText: {
+    color: "#111827",
+    fontSize: 16,
   },
   cardText: {
     fontSize: 16,
