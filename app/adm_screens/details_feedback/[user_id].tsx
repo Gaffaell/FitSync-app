@@ -10,10 +10,11 @@ import {
   where,
 } from "firebase/firestore";
 import React, { useEffect, useState } from "react";
-import { Pressable, ScrollView, StyleSheet } from "react-native";
+import { Pressable, ScrollView, StyleSheet, View } from "react-native";
 
 import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
+import { useThemeColor } from "@/hooks/use-theme-color";
 import { initializeApp } from "firebase/app";
 
 const firebaseConfig = {
@@ -30,13 +31,32 @@ export default function InformacoesAluno() {
   const app = initializeApp(firebaseConfig);
   const db = getFirestore(app);
 
-  const { user_id, dia, feedback_opcao, feedback_detalhado, data } =
-    useLocalSearchParams();
+  const { user_id, dia, data } = useLocalSearchParams();
 
   const [feedback, setFeedback] = useState<any>(null);
   const [treinosByDay, setTreinosByDay] = useState<any[]>([]);
 
-  const weekDays = [{ label: dia, color: "#0f4c81", collection: dia }];
+  const accentColor = useThemeColor({}, "accent");
+  const buttonColor = useThemeColor({}, "button");
+  const pageBackground = useThemeColor(
+    { light: "#F3F4FF", dark: "#020617" },
+    "background",
+  );
+  const cardBackground = useThemeColor(
+    { light: "#FFFFFF", dark: "#111827" },
+    "background",
+  );
+  const textColor = useThemeColor({}, "text");
+  const subtitleColor = useThemeColor(
+    { light: "#475569", dark: "#94A3B8" },
+    "text",
+  );
+  const infoLabelColor = useThemeColor(
+    { light: "#64748b", dark: "#94a3b8" },
+    "text",
+  );
+
+  const weekDays = [{ label: dia, color: accentColor, collection: dia }];
 
   useEffect(() => {
     async function fetchFeedback() {
@@ -140,27 +160,88 @@ export default function InformacoesAluno() {
   }
 
   return (
-    <ScrollView>
-      <ThemedView style={styles.container}>
-        <ThemedText type="title" style={styles.titleContainer}>
-          Informações do feedback
-        </ThemedText>
+    <ScrollView contentContainerStyle={styles.scrollContainer}>
+      <ThemedView
+        style={[styles.container, { backgroundColor: pageBackground }]}
+      >
+        <ThemedView style={[styles.hero, { backgroundColor: accentColor }]}>
+          <ThemedText
+            type="title"
+            style={[styles.heroTitle, { color: "#fff" }]}
+          >
+            Informações do feedback
+          </ThemedText>
+          <ThemedText
+            style={[styles.heroSubtitle, { color: "rgba(255,255,255,0.92)" }]}
+          >
+            Veja os detalhes do aluno e o treino previsto para o dia
+            selecionado.
+          </ThemedText>
+        </ThemedView>
 
-        <ThemedText>Nome do aluno: {feedback[0].nome_aluno}</ThemedText>
-        <ThemedText>Dia da semana: {feedback[0].dia_semana}</ThemedText>
-        <ThemedText>Feedback opção: {feedback[0].feedback_opcao}</ThemedText>
-        <ThemedText>
-          Feedback detalhado: {feedback[0].feedback_detalhado}
-        </ThemedText>
-        <ThemedText>Data do treino: {feedback[0].data}</ThemedText>
-        <ThemedText>Id do aluno: {feedback[0].id_aluno}</ThemedText>
+        <ThemedView
+          style={[
+            styles.card,
+            { backgroundColor: cardBackground, borderColor: accentColor },
+          ]}
+        >
+          <View style={styles.infoGroup}>
+            <ThemedText style={[styles.infoLabel, { color: infoLabelColor }]}>
+              Nome do aluno
+            </ThemedText>
+            <ThemedText style={[styles.infoValue, { color: textColor }]}>
+              {feedback[0].nome_aluno}
+            </ThemedText>
+          </View>
+          <View style={styles.infoGroup}>
+            <ThemedText style={[styles.infoLabel, { color: infoLabelColor }]}>
+              Dia da semana
+            </ThemedText>
+            <ThemedText style={[styles.infoValue, { color: textColor }]}>
+              {feedback[0].dia_semana}
+            </ThemedText>
+          </View>
+          <View style={styles.infoGroup}>
+            <ThemedText style={[styles.infoLabel, { color: infoLabelColor }]}>
+              Opção de feedback
+            </ThemedText>
+            <ThemedText style={[styles.infoValue, { color: textColor }]}>
+              {feedback[0].feedback_opcao}
+            </ThemedText>
+          </View>
+          <View style={styles.infoGroup}>
+            <ThemedText style={[styles.infoLabel, { color: infoLabelColor }]}>
+              Feedback detalhado
+            </ThemedText>
+            <ThemedText style={[styles.infoValue, { color: textColor }]}>
+              {feedback[0].feedback_detalhado}
+            </ThemedText>
+          </View>
+          <View style={styles.infoGroup}>
+            <ThemedText style={[styles.infoLabel, { color: infoLabelColor }]}>
+              Data do treino
+            </ThemedText>
+            <ThemedText style={[styles.infoValue, { color: textColor }]}>
+              {feedback[0].data}
+            </ThemedText>
+          </View>
+        </ThemedView>
 
-        <ScrollView style={styles.treinoContainer}>
-          <ThemedText type="title" style={styles.titleContainer}>
+        <View style={styles.treinoContainer}>
+          <ThemedText
+            type="title"
+            style={[styles.sectionTitle, { color: textColor }]}
+          >
             Treino
           </ThemedText>
           {treinosByDay.map((day) => (
-            <ThemedView key={day.collection} style={styles.dayBlock}>
+            <ThemedView
+              key={day.collection}
+              style={[
+                styles.dayBlock,
+                { backgroundColor: cardBackground, borderColor: accentColor },
+              ]}
+            >
               <ThemedText
                 type="defaultSemiBold"
                 style={[styles.dayTitle, { color: day.color }]}
@@ -168,31 +249,67 @@ export default function InformacoesAluno() {
                 {day.label}
               </ThemedText>
               {day.items.length === 0 ? (
-                <ThemedText style={styles.noTreinoText}>
+                <ThemedText
+                  style={[styles.noTreinoText, { color: subtitleColor }]}
+                >
                   Nenhum treino definido para este dia.
                 </ThemedText>
               ) : (
                 day.items.map((item: any) => (
-                  <ThemedView key={item.id} style={styles.treinoItem}>
-                    <ThemedText type="defaultSemiBold">
+                  <ThemedView
+                    key={item.id}
+                    style={[
+                      styles.treinoItem,
+                      { backgroundColor: pageBackground },
+                    ]}
+                  >
+                    <ThemedText
+                      type="defaultSemiBold"
+                      style={[styles.treinoTitle, { color: textColor }]}
+                    >
                       {item.exercicio?.nome ?? `Exercício ${item.id_exercicio}`}
                     </ThemedText>
-                    <ThemedText>{item.exercicio?.descricao ?? ""}</ThemedText>
-                    <ThemedText>Séries: {item.series}</ThemedText>
-                    <ThemedText>Repetições: {item.repeticoes}</ThemedText>
-                    <ThemedText>Carga: {item.carga}</ThemedText>
+                    <ThemedText
+                      style={[styles.treinoText, { color: subtitleColor }]}
+                    >
+                      {item.exercicio?.descricao ?? ""}
+                    </ThemedText>
+                    <ThemedText
+                      style={[styles.treinoText, { color: subtitleColor }]}
+                    >
+                      Séries: {item.series}
+                    </ThemedText>
+                    <ThemedText
+                      style={[styles.treinoText, { color: subtitleColor }]}
+                    >
+                      Repetições: {item.repeticoes}
+                    </ThemedText>
+                    <ThemedText
+                      style={[styles.treinoText, { color: subtitleColor }]}
+                    >
+                      Carga: {item.carga}
+                    </ThemedText>
                   </ThemedView>
                 ))
               )}
             </ThemedView>
           ))}
-        </ScrollView>
+        </View>
 
-        <Pressable onPress={() => deleteFeedback()} style={styles.button_2}>
-          <ThemedText style={{ color: "black" }}>Excluir feedback</ThemedText>
+        <Pressable
+          onPress={deleteFeedback}
+          style={[styles.deleteButton, { backgroundColor: "#f87171" }]}
+        >
+          <ThemedText type="defaultSemiBold" style={styles.deleteButtonText}>
+            Excluir feedback
+          </ThemedText>
         </Pressable>
-        <Link href="/adm_home" dismissTo>
-          <ThemedText type="defaultSemiBold" style={styles.cardText}>
+
+        <Link href="/adm_home" dismissTo style={styles.linkButton}>
+          <ThemedText
+            type="defaultSemiBold"
+            style={[styles.linkText, { color: accentColor }]}
+          >
             Voltar para Home
           </ThemedText>
         </Link>
@@ -202,90 +319,131 @@ export default function InformacoesAluno() {
 }
 
 const styles = StyleSheet.create({
-  titleContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 8,
-    padding: 10,
+  scrollContainer: {
+    flexGrow: 1,
+    paddingVertical: 24,
   },
   container: {
     flex: 1,
+    padding: 24,
     alignItems: "center",
-    justifyContent: "center",
+    justifyContent: "flex-start",
+  },
+  hero: {
+    width: "100%",
+    maxWidth: 520,
+    borderRadius: 24,
+    padding: 24,
+    marginBottom: 24,
+    shadowOffset: { width: 0, height: 14 },
+    shadowOpacity: 0.18,
+    shadowRadius: 22,
+    elevation: 6,
+  },
+  heroTitle: {
+    fontSize: 28,
+    marginBottom: 8,
+    textAlign: "center",
+  },
+  heroSubtitle: {
+    fontSize: 15,
+    lineHeight: 22,
+    textAlign: "center",
+  },
+  card: {
+    width: "100%",
+    maxWidth: 520,
+    borderRadius: 22,
     padding: 20,
+    marginBottom: 20,
+    borderWidth: 1,
+    shadowOffset: { width: 0, height: 10 },
+    shadowOpacity: 0.16,
+    shadowRadius: 18,
+    elevation: 5,
+  },
+  infoGroup: {
+    width: "100%",
+    marginBottom: 16,
+  },
+  infoLabel: {
+    fontSize: 14,
+    marginBottom: 6,
+    fontWeight: "600",
+  },
+  infoValue: {
+    fontSize: 16,
+    lineHeight: 22,
   },
   treinoContainer: {
     width: "100%",
+    maxWidth: 520,
+    marginBottom: 16,
+  },
+  sectionTitle: {
+    fontSize: 22,
     marginBottom: 16,
   },
   dayBlock: {
     width: "100%",
-    borderRadius: 16,
-    padding: 16,
-    marginBottom: 14,
-    backgroundColor: "rgba(255,255,255,0.08)",
+    borderRadius: 20,
+    padding: 18,
+    marginBottom: 16,
+    borderWidth: 1,
   },
   dayTitle: {
     fontSize: 18,
-    marginBottom: 10,
+    marginBottom: 12,
   },
   noTreinoText: {
     fontSize: 14,
-    color: "#94a3b8",
+    marginBottom: 10,
   },
   treinoItem: {
-    padding: 12,
-    borderRadius: 12,
-    backgroundColor: "rgba(0,0,0,0.08)",
-    marginBottom: 10,
+    width: "100%",
+    borderRadius: 18,
+    padding: 16,
+    marginBottom: 14,
+    borderWidth: 1,
+    borderColor: "rgba(255,255,255,0.12)",
   },
-  stepContainer: {
-    gap: 8,
+  treinoTitle: {
+    fontSize: 16,
+    fontWeight: "700",
     marginBottom: 8,
   },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: "absolute",
+  treinoText: {
+    fontSize: 14,
+    lineHeight: 20,
+    marginBottom: 4,
   },
-  input: {
+  deleteButton: {
+    width: "100%",
+    maxWidth: 520,
+    borderRadius: 18,
+    paddingVertical: 16,
+    alignItems: "center",
+    justifyContent: "center",
+    marginBottom: 12,
+    shadowOffset: { width: 0, height: 10 },
+    shadowOpacity: 0.18,
+    shadowRadius: 18,
+    elevation: 5,
+  },
+  deleteButtonText: {
     color: "#ffffff",
-    borderWidth: 1,
-    borderColor: "#ccc",
-    padding: 10,
-    borderRadius: 5,
-    marginBottom: 10,
-  },
-  button: {
-    backgroundColor: "#007bff",
-    marginBottom: 10,
-    padding: 10,
-    borderRadius: 5,
-    alignItems: "center",
-  },
-  button_2: {
-    backgroundColor: "yellow",
-    marginBottom: 10,
-    padding: 10,
-    borderRadius: 5,
-    alignItems: "center",
-  },
-  button_3: {
-    backgroundColor: "red",
-    marginBottom: 10,
-    padding: 10,
-    borderRadius: 5,
-    alignItems: "center",
-  },
-  link: {
-    marginTop: 15,
-    paddingVertical: 15,
-  },
-  cardText: {
-    fontSize: 18,
+    fontSize: 16,
     fontWeight: "700",
-    color: "#ffffff",
+  },
+  linkButton: {
+    width: "100%",
+    maxWidth: 520,
+    paddingVertical: 16,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  linkText: {
+    fontSize: 16,
+    fontWeight: "700",
   },
 });

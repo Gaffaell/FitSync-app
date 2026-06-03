@@ -6,10 +6,12 @@ import {
   StyleSheet,
   TextInput,
   TouchableOpacity,
+  View,
 } from "react-native";
 
 import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
+import { useThemeColor } from "@/hooks/use-theme-color";
 import { initializeApp } from "firebase/app";
 import { getFirestore } from "firebase/firestore";
 
@@ -27,8 +29,23 @@ export default function InformacoesAluno() {
   const app = initializeApp(firebaseConfig);
   const db = getFirestore(app);
 
-  const { id } = useLocalSearchParams();
+  const accentColor = useThemeColor({}, "accent");
+  const buttonColor = useThemeColor({}, "button");
+  const pageBackground = useThemeColor(
+    { light: "#F3F4FF", dark: "#020617" },
+    "background",
+  );
+  const cardBackground = useThemeColor(
+    { light: "#FFFFFF", dark: "#111827" },
+    "background",
+  );
+  const textColor = useThemeColor({}, "text");
+  const subtitleColor = useThemeColor(
+    { light: "#475569", dark: "#94A3B8" },
+    "text",
+  );
 
+  const { id } = useLocalSearchParams();
   const [user, setUser] = useState<any>(null);
 
   useEffect(() => {
@@ -52,7 +69,6 @@ export default function InformacoesAluno() {
     try {
       if (typeof id !== "string") return;
       const userRef = doc(db, "aluno", id);
-      console.log(user);
       await updateDoc(userRef, {
         nome: String(user.nome ?? ""),
         idade: String(user.idade ?? ""),
@@ -71,148 +87,304 @@ export default function InformacoesAluno() {
   }
 
   return (
-    <ScrollView>
-      <ThemedView style={styles.container}>
-        <ThemedText type="title" style={styles.titleContainer}>
-          Editar informações de aluno
-        </ThemedText>
-
-        <ThemedText>Nome: </ThemedText>
-        <TextInput
-          placeholder="Novo nome"
-          style={styles.input}
-          value={user.nome ?? ""}
-          onChangeText={(text) => setUser({ ...user, nome: text })}
-        />
-        <ThemedText>Idade: </ThemedText>
-        <TextInput
-          placeholder="Nova idade"
-          style={styles.input}
-          value={user.idade ?? ""}
-          keyboardType="numeric"
-          onChangeText={(text) => setUser({ ...user, idade: text })}
-        />
-        <ThemedText>Email: </ThemedText>
-        <TextInput
-          placeholder="Novo email"
-          style={styles.input}
-          value={user.email ?? ""}
-          keyboardType="email-address"
-          autoCapitalize="none"
-          onChangeText={(text) => setUser({ ...user, email: text })}
-        />
-        <ThemedText>Senha: </ThemedText>
-        <TextInput
-          placeholder="Nova senha"
-          style={styles.input}
-          value={user.senha ?? ""}
-          onChangeText={(text) => setUser({ ...user, senha: text })}
-        />
-        <ThemedText>Altura: </ThemedText>
-        <TextInput
-          placeholder="Nova altura"
-          style={styles.input}
-          value={user.altura ?? ""}
-          onChangeText={(text) => setUser({ ...user, altura: text })}
-        />
-        <ThemedText>Peso: </ThemedText>
-        <TextInput
-          placeholder="Novo peso"
-          style={styles.input}
-          value={user.peso ?? ""}
-          onChangeText={(text) => setUser({ ...user, peso: text })}
-        />
-        <ThemedText>Sexo: </ThemedText>
-        <TextInput
-          placeholder="Novo sexo"
-          style={styles.input}
-          value={user.sexo ?? ""}
-          onChangeText={(text) => setUser({ ...user, sexo: text })}
-        />
-        <ThemedText>Telefone: </ThemedText>
-        <TextInput
-          placeholder="Novo telefone"
-          style={styles.input}
-          value={user.telefone ?? ""}
-          keyboardType="phone-pad"
-          onChangeText={(text) => setUser({ ...user, telefone: text })}
-        />
-
-        <TouchableOpacity onPress={() => updateUser(id)}>
-          <ThemedText style={styles.button}>Salvar informações</ThemedText>
-        </TouchableOpacity>
-        <Link href="/adm_home" dismissTo>
-          <ThemedText type="defaultSemiBold" style={styles.cardText}>
-            Voltar para Home
+    <ScrollView contentContainerStyle={styles.scrollView}>
+      <ThemedView
+        style={[styles.container, { backgroundColor: pageBackground }]}
+      >
+        <ThemedView style={[styles.hero, { backgroundColor: accentColor }]}>
+          <ThemedText type="title" style={styles.heroTitle}>
+            Editar informações
           </ThemedText>
-        </Link>
+          <ThemedText style={styles.heroSubtitle}>
+            Atualize os dados do aluno com o mesmo visual roxo e laranja do
+            sistema.
+          </ThemedText>
+        </ThemedView>
+
+        <ThemedView
+          style={[
+            styles.card,
+            {
+              backgroundColor: cardBackground,
+              borderColor: accentColor,
+              shadowColor: accentColor,
+            },
+          ]}
+        >
+          <View style={styles.fieldGroup}>
+            <ThemedText style={[styles.label, { color: subtitleColor }]}>
+              Nome
+            </ThemedText>
+            <TextInput
+              placeholder="Novo nome"
+              placeholderTextColor="rgba(148, 163, 184, 0.8)"
+              style={[
+                styles.input,
+                {
+                  color: textColor,
+                  backgroundColor: pageBackground,
+                  borderColor: accentColor,
+                },
+              ]}
+              value={user.nome ?? ""}
+              onChangeText={(text) => setUser({ ...user, nome: text })}
+            />
+          </View>
+
+          <View style={styles.fieldGroup}>
+            <ThemedText style={[styles.label, { color: subtitleColor }]}>
+              Idade
+            </ThemedText>
+            <TextInput
+              placeholder="Nova idade"
+              placeholderTextColor="rgba(148, 163, 184, 0.8)"
+              style={[
+                styles.input,
+                {
+                  color: textColor,
+                  backgroundColor: pageBackground,
+                  borderColor: accentColor,
+                },
+              ]}
+              value={user.idade ?? ""}
+              keyboardType="numeric"
+              onChangeText={(text) => setUser({ ...user, idade: text })}
+            />
+          </View>
+
+          <View style={styles.fieldGroup}>
+            <ThemedText style={[styles.label, { color: subtitleColor }]}>
+              Email
+            </ThemedText>
+            <TextInput
+              placeholder="Novo email"
+              placeholderTextColor="rgba(148, 163, 184, 0.8)"
+              style={[
+                styles.input,
+                {
+                  color: textColor,
+                  backgroundColor: pageBackground,
+                  borderColor: accentColor,
+                },
+              ]}
+              value={user.email ?? ""}
+              keyboardType="email-address"
+              autoCapitalize="none"
+              onChangeText={(text) => setUser({ ...user, email: text })}
+            />
+          </View>
+
+          <View style={styles.fieldGroup}>
+            <ThemedText style={[styles.label, { color: subtitleColor }]}>
+              Senha
+            </ThemedText>
+            <TextInput
+              placeholder="Nova senha"
+              placeholderTextColor="rgba(148, 163, 184, 0.8)"
+              style={[
+                styles.input,
+                {
+                  color: textColor,
+                  backgroundColor: pageBackground,
+                  borderColor: accentColor,
+                },
+              ]}
+              value={user.senha ?? ""}
+              onChangeText={(text) => setUser({ ...user, senha: text })}
+            />
+          </View>
+
+          <View style={styles.fieldGroup}>
+            <ThemedText style={[styles.label, { color: subtitleColor }]}>
+              Altura
+            </ThemedText>
+            <TextInput
+              placeholder="Nova altura"
+              placeholderTextColor="rgba(148, 163, 184, 0.8)"
+              style={[
+                styles.input,
+                {
+                  color: textColor,
+                  backgroundColor: pageBackground,
+                  borderColor: accentColor,
+                },
+              ]}
+              value={user.altura ?? ""}
+              onChangeText={(text) => setUser({ ...user, altura: text })}
+            />
+          </View>
+
+          <View style={styles.fieldGroup}>
+            <ThemedText style={[styles.label, { color: subtitleColor }]}>
+              Peso
+            </ThemedText>
+            <TextInput
+              placeholder="Novo peso"
+              placeholderTextColor="rgba(148, 163, 184, 0.8)"
+              style={[
+                styles.input,
+                {
+                  color: textColor,
+                  backgroundColor: pageBackground,
+                  borderColor: accentColor,
+                },
+              ]}
+              value={user.peso ?? ""}
+              onChangeText={(text) => setUser({ ...user, peso: text })}
+            />
+          </View>
+
+          <View style={styles.fieldGroup}>
+            <ThemedText style={[styles.label, { color: subtitleColor }]}>
+              Sexo
+            </ThemedText>
+            <TextInput
+              placeholder="Novo sexo"
+              placeholderTextColor="rgba(148, 163, 184, 0.8)"
+              style={[
+                styles.input,
+                {
+                  color: textColor,
+                  backgroundColor: pageBackground,
+                  borderColor: accentColor,
+                },
+              ]}
+              value={user.sexo ?? ""}
+              onChangeText={(text) => setUser({ ...user, sexo: text })}
+            />
+          </View>
+
+          <View style={styles.fieldGroup}>
+            <ThemedText style={[styles.label, { color: subtitleColor }]}>
+              Telefone
+            </ThemedText>
+            <TextInput
+              placeholder="Novo telefone"
+              placeholderTextColor="rgba(148, 163, 184, 0.8)"
+              style={[
+                styles.input,
+                {
+                  color: textColor,
+                  backgroundColor: pageBackground,
+                  borderColor: accentColor,
+                },
+              ]}
+              value={user.telefone ?? ""}
+              keyboardType="phone-pad"
+              onChangeText={(text) => setUser({ ...user, telefone: text })}
+            />
+          </View>
+
+          <TouchableOpacity
+            onPress={() => updateUser(id)}
+            style={[styles.saveButton, { backgroundColor: buttonColor }]}
+          >
+            <ThemedText type="defaultSemiBold" style={styles.saveButtonText}>
+              Salvar informações
+            </ThemedText>
+          </TouchableOpacity>
+
+          <Link href="/adm_home" dismissTo style={styles.linkButton}>
+            <ThemedText
+              type="defaultSemiBold"
+              style={[styles.linkText, { color: accentColor }]}
+            >
+              Voltar para Home
+            </ThemedText>
+          </Link>
+        </ThemedView>
       </ThemedView>
     </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
-  titleContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 8,
-    padding: 10,
+  scrollView: {
+    paddingVertical: 24,
   },
   container: {
     flex: 1,
+    padding: 24,
     alignItems: "center",
-    justifyContent: "center",
-    padding: 20,
+    justifyContent: "flex-start",
   },
-  stepContainer: {
-    gap: 8,
-    marginBottom: 8,
-  },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: "absolute",
-  },
-  input: {
-    color: "#ffffff",
-    borderWidth: 1,
-    borderColor: "#ccc",
-    padding: 10,
-    borderRadius: 5,
-    marginBottom: 10,
+  hero: {
     width: "100%",
+    maxWidth: 520,
+    borderRadius: 24,
+    padding: 24,
+    marginBottom: 24,
+    shadowOffset: { width: 0, height: 14 },
+    shadowOpacity: 0.18,
+    shadowRadius: 22,
+    elevation: 6,
+  },
+  heroTitle: {
+    color: "#FFFFFF",
+    marginBottom: 10,
     textAlign: "center",
   },
-  button: {
-    backgroundColor: "#007bff",
-    marginBottom: 10,
-    padding: 10,
-    borderRadius: 5,
+  heroSubtitle: {
+    color: "rgba(255,255,255,0.92)",
+    fontSize: 15,
+    lineHeight: 22,
+    textAlign: "center",
+  },
+  card: {
+    width: "100%",
+    maxWidth: 520,
+    borderRadius: 20,
+    padding: 20,
+    borderWidth: 1,
+    shadowOffset: { width: 0, height: 10 },
+    shadowOpacity: 0.16,
+    shadowRadius: 18,
+    elevation: 5,
+  },
+  fieldGroup: {
+    width: "100%",
+    marginBottom: 16,
+  },
+  label: {
+    fontSize: 15,
+    marginBottom: 8,
+    fontWeight: "600",
+  },
+  input: {
+    width: "100%",
+    paddingHorizontal: 16,
+    paddingVertical: 14,
+    borderRadius: 16,
+    borderWidth: 1,
+    fontSize: 16,
+  },
+  saveButton: {
+    width: "100%",
+    borderRadius: 18,
+    paddingVertical: 16,
     alignItems: "center",
+    justifyContent: "center",
+    marginTop: 8,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 10 },
+    shadowOpacity: 0.18,
+    shadowRadius: 18,
+    elevation: 5,
   },
-  button_2: {
-    backgroundColor: "yellow",
-    marginBottom: 10,
-    padding: 10,
-    borderRadius: 5,
-    alignItems: "center",
-  },
-  button_3: {
-    backgroundColor: "red",
-    marginBottom: 10,
-    padding: 10,
-    borderRadius: 5,
-    alignItems: "center",
-  },
-  link: {
-    marginTop: 15,
-    paddingVertical: 15,
-  },
-  cardText: {
-    fontSize: 18,
-    fontWeight: "700",
+  saveButtonText: {
     color: "#ffffff",
+    fontSize: 16,
+    fontWeight: "700",
+  },
+  linkButton: {
+    width: "100%",
+    marginTop: 12,
+    paddingVertical: 16,
+    borderRadius: 18,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  linkText: {
+    fontSize: 16,
   },
 });

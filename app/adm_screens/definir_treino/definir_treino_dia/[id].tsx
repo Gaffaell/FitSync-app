@@ -9,8 +9,10 @@ import {
   Pressable,
   StyleSheet,
   TouchableOpacity,
-  useColorScheme,
+  View,
 } from "react-native";
+
+import { useThemeColor } from "@/hooks/use-theme-color";
 
 const firebaseConfig = {
   apiKey: "AIzaSyAiRZdjS62ZR3vjBIg4RJ5v0YyxxCWytkk",
@@ -27,8 +29,23 @@ const db = getFirestore(app);
 
 export default function ListaExercicios() {
   const { dia, id } = useLocalSearchParams();
-  console.log(dia, id);
   const [exercicios, setExercicios] = useState<any[]>([]);
+
+  const accentColor = useThemeColor({}, "accent");
+  const buttonColor = useThemeColor({}, "button");
+  const pageBackground = useThemeColor(
+    { light: "#F3F4FF", dark: "#020617" },
+    "background",
+  );
+  const cardBackground = useThemeColor(
+    { light: "#FFFFFF", dark: "#111827" },
+    "background",
+  );
+  const textColor = useThemeColor({}, "text");
+  const subtitleColor = useThemeColor(
+    { light: "#475569", dark: "#94A3B8" },
+    "text",
+  );
 
   const fetchExercicios = async () => {
     try {
@@ -46,77 +63,92 @@ export default function ListaExercicios() {
   useEffect(() => {
     fetchExercicios();
   }, []);
-  const theme = useColorScheme();
-  const containerBg = theme === "dark" ? "#071014" : "#edf6ff";
-  const cardBg = theme === "dark" ? "#111827" : "#ffffff";
-  const cardShadow = theme === "dark" ? "#000" : "#0a7ea4";
-  const titleColor = theme === "dark" ? "#f8fafc" : "#0f4c81";
-  const subtitleColor = theme === "dark" ? "#94a3b8" : "#4b6570";
 
   return (
-    <ThemedView style={[styles.container, { backgroundColor: containerBg }]}>
+    <ThemedView style={[styles.container, { backgroundColor: pageBackground }]}>
       <FlatList
         data={exercicios}
         keyExtractor={(item) => item.id}
         contentContainerStyle={styles.list}
         ListHeaderComponent={
-          <>
+          <View style={styles.header}>
             <ThemedText
               type="title"
-              style={[styles.title, { color: titleColor }]}
+              style={[styles.headerTitle, { color: textColor }]}
             >
               Exercícios
             </ThemedText>
             <ThemedText
               type="subtitle"
-              style={[styles.cardText, { color: subtitleColor }]}
+              style={[styles.headerSubtitle, { color: subtitleColor }]}
             >
               Selecione um exercício para definir no dia.
             </ThemedText>
-          </>
+          </View>
         }
         ListFooterComponent={
-          <>
+          <View style={styles.footer}>
             <Link href="/adm_home" asChild>
               <Pressable
-                onPress={() => alert("Salvo com sucesso")}
-                style={styles.button}
+                style={StyleSheet.flatten([
+                  styles.saveButton,
+                  { backgroundColor: buttonColor, shadowColor: buttonColor },
+                ])}
               >
-                <ThemedText>Salvar</ThemedText>
+                <ThemedText
+                  type="defaultSemiBold"
+                  style={styles.saveButtonText}
+                >
+                  Salvar
+                </ThemedText>
               </Pressable>
             </Link>
 
-            <Link href="/adm_home" dismissTo>
-              <ThemedText type="defaultSemiBold" style={styles.cardText}>
+            <Link href="/adm_home" dismissTo style={styles.linkButton}>
+              <ThemedText
+                type="defaultSemiBold"
+                style={[styles.linkText, { color: accentColor }]}
+              >
                 Voltar para Home
               </ThemedText>
             </Link>
-          </>
+          </View>
         }
         renderItem={({ item }) => (
-          <TouchableOpacity style={styles.item}>
+          <TouchableOpacity
+            style={StyleSheet.flatten([
+              styles.item,
+              {
+                backgroundColor: cardBackground,
+                borderColor: accentColor,
+                shadowColor: accentColor,
+              },
+            ])}
+            onPress={() =>
+              router.push({
+                pathname:
+                  "/adm_screens/definir_treino/definir_treino_dia/definir_exercicio/definicao/[exercicio_id]",
+                params: {
+                  exercicio_id: item.id.toString(),
+                  id: id?.toString(),
+                  dia: dia?.toString(),
+                },
+              })
+            }
+          >
             <ThemedText
               type="defaultSemiBold"
-              style={styles.title}
-              onPress={() =>
-                router.push({
-                  pathname:
-                    "/adm_screens/definir_treino/definir_treino_dia/definir_exercicio/definicao/[exercicio_id]",
-                  params: {
-                    exercicio_id: item.id.toString(),
-                    id: id.toString(),
-                    dia: dia.toString(),
-                  },
-                })
-              }
+              style={[styles.itemTitle, { color: textColor }]}
             >
               {item.nome}
             </ThemedText>
-            <ThemedText style={styles.cardText}>{item.descricao}</ThemedText>
+            <ThemedText style={[styles.itemSubtitle, { color: subtitleColor }]}>
+              {item.descricao}
+            </ThemedText>
           </TouchableOpacity>
         )}
         ListEmptyComponent={
-          <ThemedText style={styles.cardText}>
+          <ThemedText style={[styles.emptyText, { color: subtitleColor }]}>
             Nenhum exercício encontrado.
           </ThemedText>
         }
@@ -129,35 +161,80 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: "center",
-    justifyContent: "center",
-    padding: 20,
+    justifyContent: "flex-start",
+    padding: 24,
   },
-  item: {
-    backgroundColor: "#2c1849",
-    padding: 20,
-    marginVertical: 8,
-    marginHorizontal: 10,
+  header: {
+    width: "100%",
+    maxWidth: 520,
+    marginBottom: 24,
   },
-  button: {
-    backgroundColor: "#007bff",
-    padding: 10,
-    borderRadius: 5,
-    alignItems: "center",
-  },
-  title: {
+  headerTitle: {
     fontSize: 32,
+    marginBottom: 10,
   },
-  link: {
-    marginTop: 15,
-    paddingVertical: 15,
-    alignSelf: "center",
+  headerSubtitle: {
+    fontSize: 16,
+    lineHeight: 22,
   },
   list: {
     width: "100%",
-    paddingBottom: 20,
+    maxWidth: 520,
+    paddingBottom: 28,
   },
-  cardText: {
+  item: {
+    width: "100%",
+    borderRadius: 22,
+    padding: 20,
+    marginBottom: 16,
+    borderWidth: 1,
+    shadowOffset: { width: 0, height: 10 },
+    shadowOpacity: 0.14,
+    shadowRadius: 18,
+    elevation: 5,
+  },
+  itemTitle: {
+    fontSize: 18,
+    fontWeight: "700",
+    marginBottom: 8,
+  },
+  itemSubtitle: {
+    fontSize: 14,
+    lineHeight: 20,
+  },
+  footer: {
+    width: "100%",
+    gap: 12,
+    marginTop: 12,
+    alignItems: "center",
+  },
+  saveButton: {
+    width: "100%",
+    paddingVertical: 16,
+    borderRadius: 18,
+    alignItems: "center",
+    justifyContent: "center",
+    shadowOffset: { width: 0, height: 10 },
+    shadowOpacity: 0.18,
+    shadowRadius: 18,
+    elevation: 5,
+  },
+  saveButtonText: {
+    color: "#fff",
     fontSize: 16,
+  },
+  linkButton: {
+    width: "100%",
+    paddingVertical: 16,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  linkText: {
+    fontSize: 16,
+  },
+  emptyText: {
+    fontSize: 16,
+    marginTop: 20,
     textAlign: "center",
   },
 });
