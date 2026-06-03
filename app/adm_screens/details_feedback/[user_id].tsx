@@ -31,7 +31,12 @@ export default function InformacoesAluno() {
   const app = initializeApp(firebaseConfig);
   const db = getFirestore(app);
 
-  const { user_id, dia, data } = useLocalSearchParams();
+  const params = useLocalSearchParams();
+  const user_id = Array.isArray(params.user_id)
+    ? params.user_id[0]
+    : params.user_id;
+  const dia = Array.isArray(params.dia) ? params.dia[0] : params.dia;
+  const data = Array.isArray(params.data) ? params.data[0] : params.data;
 
   const [feedback, setFeedback] = useState<any>(null);
   const [treinosByDay, setTreinosByDay] = useState<any[]>([]);
@@ -56,11 +61,19 @@ export default function InformacoesAluno() {
     "text",
   );
 
-  const weekDays = [{ label: dia, color: accentColor, collection: dia }];
+  const weekDays =
+    typeof dia === "string"
+      ? [{ label: dia, color: accentColor, collection: dia }]
+      : [];
 
   useEffect(() => {
     async function fetchFeedback() {
-      if (typeof user_id !== "string") return;
+      if (
+        typeof user_id !== "string" ||
+        typeof dia !== "string" ||
+        typeof data !== "string"
+      )
+        return;
       const feedbackQuery = query(
         collection(db, "feedbacks"),
         where("id_aluno", "==", user_id),
@@ -76,11 +89,11 @@ export default function InformacoesAluno() {
     }
 
     fetchFeedback();
-  }, [user_id]);
+  }, [user_id, dia, data]);
 
   useEffect(() => {
     async function fetchTreinosByDay() {
-      if (typeof user_id !== "string") return;
+      if (typeof user_id !== "string" || typeof dia !== "string") return;
 
       const queryResults = await Promise.all(
         weekDays.map(async (day) => {
@@ -138,7 +151,7 @@ export default function InformacoesAluno() {
     fetchTreinosByDay();
   }, [user_id]);
 
-  if (!feedback) {
+  if (!user_id || !dia || !data || !feedback) {
     return <ThemedText>Loading...</ThemedText>;
   }
 
