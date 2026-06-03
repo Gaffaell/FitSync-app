@@ -1,14 +1,9 @@
 import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
+import { useThemeColor } from "@/hooks/use-theme-color";
 import { Link, router, useLocalSearchParams } from "expo-router";
 import React, { useState } from "react";
-import {
-  Pressable,
-  ScrollView,
-  StyleSheet,
-  TextInput,
-  useColorScheme,
-} from "react-native";
+import { Pressable, ScrollView, StyleSheet, TextInput } from "react-native";
 
 // Firebase
 import { initializeApp } from "firebase/app";
@@ -31,19 +26,37 @@ const db = getFirestore(app);
 
 export default function CadastroTreino() {
   const { exercicio_id, id, dia } = useLocalSearchParams();
-  console.log(exercicio_id, id, dia);
   const [formData, setFormData] = useState({
-    id_aluno: id.toString(),
-    id_exercicio: exercicio_id.toString(),
+    id_aluno: id?.toString() ?? "",
+    id_exercicio: exercicio_id?.toString() ?? "",
     carga: "",
     series: "",
     repeticoes: "",
   });
-  const theme = useColorScheme();
-  const inputBackground = theme === "dark" ? "#1f2937" : "#f8fafc";
-  const inputColor = theme === "dark" ? "#f8fafc" : "#0f172a";
-  const cardBackground = theme === "dark" ? "#111827" : "#ffffff";
-  const shadowColor = theme === "dark" ? "#000" : "#0a7ea4";
+
+  const accentColor = useThemeColor({}, "accent");
+  const buttonColor = useThemeColor({}, "button");
+  const pageBackground = useThemeColor(
+    { light: "#F3F4FF", dark: "#020617" },
+    "background",
+  );
+  const cardBackground = useThemeColor(
+    { light: "#FFFFFF", dark: "#111827" },
+    "background",
+  );
+  const textColor = useThemeColor({}, "text");
+  const subtitleColor = useThemeColor(
+    { light: "#475569", dark: "#94A3B8" },
+    "text",
+  );
+  const inputBackground = useThemeColor(
+    { light: "#F8FAFC", dark: "#1F2937" },
+    "background",
+  );
+  const inputColor = useThemeColor(
+    { light: "#0F172A", dark: "#F8FAFC" },
+    "text",
+  );
 
   const handleChange = (name: string, value: string) => {
     setFormData({ ...formData, [name]: value });
@@ -72,73 +85,89 @@ export default function CadastroTreino() {
     }
   };
 
-  const cardStyle = {
-    ...styles.card,
-    backgroundColor: cardBackground,
-    shadowColor,
-  };
-  const inputStyle = {
-    ...styles.input,
-    backgroundColor: inputBackground,
-    color: inputColor,
-  };
-  const primaryButtonStyle = {
-    ...styles.button,
-    ...styles.primaryButton,
-  };
+  const cardStyle = StyleSheet.flatten([
+    styles.card,
+    { backgroundColor: cardBackground, borderColor: accentColor },
+  ]);
+  const inputStyle = StyleSheet.flatten([
+    styles.input,
+    {
+      backgroundColor: inputBackground,
+      color: inputColor,
+      borderColor: accentColor,
+    },
+  ]);
+  const primaryButtonStyle = StyleSheet.flatten([
+    styles.button,
+    styles.primaryButton,
+    { backgroundColor: buttonColor },
+  ]);
 
   return (
     <ScrollView contentContainerStyle={styles.scrollContainer}>
       <ThemedView
-        style={styles.container}
-        lightColor="#edf6ff"
-        darkColor="#071014"
+        style={[styles.container, { backgroundColor: pageBackground }]}
       >
-        <ThemedText type="title" style={styles.heading}>
-          Cadastrar treino
-        </ThemedText>
-        <ThemedText
-          type="subtitle"
-          lightColor="#4b6570"
-          darkColor="#9ca3af"
-          style={styles.subtitle}
-        >
-          Adicione um treino novo ao sistema e comece a personalizar os
-          exercícios.
-        </ThemedText>
+        <ThemedView style={[styles.hero, { backgroundColor: accentColor }]}>
+          <ThemedText type="title" style={[styles.heading, { color: "#fff" }]}>
+            Cadastrar treino
+          </ThemedText>
+          <ThemedText
+            type="subtitle"
+            style={[styles.subtitle, { color: "rgba(255,255,255,0.9)" }]}
+          >
+            Adicione um treino novo ao sistema e comece a personalizar os
+            exercícios.
+          </ThemedText>
+        </ThemedView>
 
         <ThemedView style={cardStyle}>
-          <ThemedText type="defaultSemiBold" style={styles.fieldLabel}>
-            id_aluno
+          <ThemedText
+            type="defaultSemiBold"
+            style={[styles.fieldLabel, { color: subtitleColor }]}
+          >
+            ID do aluno
           </ThemedText>
           <TextInput
             style={inputStyle}
-            value={id.toString()}
+            value={id?.toString() ?? ""}
             onChangeText={(text) => handleChange("id_aluno", text)}
           />
-          <ThemedText type="defaultSemiBold" style={styles.fieldLabel}>
-            id_exercicio
+          <ThemedText
+            type="defaultSemiBold"
+            style={[styles.fieldLabel, { color: subtitleColor }]}
+          >
+            ID do exercício
           </ThemedText>
           <TextInput
             style={inputStyle}
-            value={exercicio_id.toString()}
+            value={exercicio_id?.toString() ?? ""}
             onChangeText={(text) => handleChange("id_exercicio", text)}
           />
-          <ThemedText type="defaultSemiBold" style={styles.fieldLabel}>
+          <ThemedText
+            type="defaultSemiBold"
+            style={[styles.fieldLabel, { color: subtitleColor }]}
+          >
             Carga
           </ThemedText>
           <TextInput
             style={inputStyle}
             onChangeText={(text) => handleChange("carga", text)}
           />
-          <ThemedText type="defaultSemiBold" style={styles.fieldLabel}>
+          <ThemedText
+            type="defaultSemiBold"
+            style={[styles.fieldLabel, { color: subtitleColor }]}
+          >
             Séries
           </ThemedText>
           <TextInput
             style={inputStyle}
             onChangeText={(text) => handleChange("series", text)}
           />
-          <ThemedText type="defaultSemiBold" style={styles.fieldLabel}>
+          <ThemedText
+            type="defaultSemiBold"
+            style={[styles.fieldLabel, { color: subtitleColor }]}
+          >
             Repetições
           </ThemedText>
           <TextInput
@@ -146,13 +175,18 @@ export default function CadastroTreino() {
             onChangeText={(text) => handleChange("repeticoes", text)}
           />
         </ThemedView>
+
         <Pressable onPress={handleSubmit} style={primaryButtonStyle}>
           <ThemedText type="defaultSemiBold" style={styles.buttonText}>
             Cadastrar
           </ThemedText>
         </Pressable>
-        <Link href="/adm_home" dismissTo>
-          <ThemedText type="defaultSemiBold" style={styles.cardText}>
+
+        <Link href="/adm_home" dismissTo style={styles.linkButton}>
+          <ThemedText
+            type="defaultSemiBold"
+            style={[styles.linkText, { color: accentColor }]}
+          >
             Voltar para Home
           </ThemedText>
         </Link>
@@ -169,8 +203,18 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "flex-start",
   },
+  hero: {
+    width: "100%",
+    maxWidth: 520,
+    borderRadius: 24,
+    padding: 24,
+    marginBottom: 20,
+    shadowOffset: { width: 0, height: 14 },
+    shadowOpacity: 0.18,
+    shadowRadius: 22,
+    elevation: 6,
+  },
   heading: {
-    marginTop: 56,
     marginBottom: 8,
     textAlign: "center",
   },
@@ -183,9 +227,10 @@ const styles = StyleSheet.create({
   card: {
     width: "100%",
     maxWidth: 520,
-    borderRadius: 20,
-    padding: 20,
+    borderRadius: 24,
+    padding: 22,
     marginBottom: 20,
+    borderWidth: 1,
     shadowOffset: { width: 0, height: 10 },
     shadowOpacity: 0.16,
     shadowRadius: 18,
@@ -193,24 +238,30 @@ const styles = StyleSheet.create({
   },
   fieldLabel: {
     marginBottom: 8,
-    color: "#64748b",
     fontSize: 14,
+    fontWeight: "600",
   },
   input: {
     width: "100%",
-    borderRadius: 16,
+    borderRadius: 18,
     paddingHorizontal: 16,
     paddingVertical: 14,
     marginBottom: 16,
     fontSize: 16,
+    borderWidth: 1,
   },
   button: {
     width: "100%",
     maxWidth: 520,
-    borderRadius: 16,
+    borderRadius: 18,
     paddingVertical: 16,
     alignItems: "center",
+    justifyContent: "center",
     marginBottom: 12,
+    shadowOffset: { width: 0, height: 10 },
+    shadowOpacity: 0.18,
+    shadowRadius: 18,
+    elevation: 5,
   },
   primaryButton: {
     backgroundColor: "#6b42c1",
@@ -220,12 +271,19 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: "700",
   },
-  link: {
+  linkButton: {
+    width: "100%",
+    maxWidth: 520,
+    paddingVertical: 16,
+    alignItems: "center",
+    justifyContent: "center",
     marginTop: 12,
-    paddingVertical: 12,
+  },
+  linkText: {
+    fontSize: 16,
+  },
+  cardText: {
     fontSize: 16,
     textAlign: "center",
-    color: "#6b42c1",
   },
-  cardText: { fontSize: 16, textAlign: "center" },
 });

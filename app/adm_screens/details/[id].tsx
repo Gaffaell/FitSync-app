@@ -14,12 +14,12 @@ import {
   Pressable,
   ScrollView,
   StyleSheet,
-  TouchableOpacity,
-  View,
+  View
 } from "react-native";
 
 import { ThemedText } from "@/components/themed-text";
 import { ThemedView } from "@/components/themed-view";
+import { useThemeColor } from "@/hooks/use-theme-color";
 import { initializeApp } from "firebase/app";
 
 const weekDays = [
@@ -45,6 +45,22 @@ export default function InformacoesAluno() {
 
   const app = initializeApp(firebaseConfig);
   const db = getFirestore(app);
+
+  const accentColor = useThemeColor({}, "accent");
+  const buttonColor = useThemeColor({}, "button");
+  const pageBackground = useThemeColor(
+    { light: "#F3F4FF", dark: "#020617" },
+    "background",
+  );
+  const cardBackground = useThemeColor(
+    { light: "#FFFFFF", dark: "#111827" },
+    "background",
+  );
+  const textColor = useThemeColor({}, "text");
+  const subtitleColor = useThemeColor(
+    { light: "#475569", dark: "#94A3B8" },
+    "text",
+  );
 
   const { id } = useLocalSearchParams();
 
@@ -147,51 +163,93 @@ export default function InformacoesAluno() {
   }
 
   return (
-    <ScrollView>
-      <ThemedView style={styles.container}>
-        <ThemedText type="title" style={styles.titleContainer}>
-          Informações de aluno
-        </ThemedText>
+    <ScrollView contentContainerStyle={styles.scrollView}>
+      <ThemedView
+        style={[styles.container, { backgroundColor: pageBackground }]}
+      >
+        <ThemedView style={[styles.hero, { backgroundColor: accentColor }]}>
+          <ThemedText type="title" style={styles.heroTitle}>
+            Informações de aluno
+          </ThemedText>
+          <ThemedText style={styles.heroSubtitle}>
+            Detalhes do aluno e seus treinos organizados por dia.
+          </ThemedText>
+        </ThemedView>
 
-        <ThemedView style={styles.card}>
+        <ThemedView
+          style={[
+            styles.card,
+            {
+              backgroundColor: cardBackground,
+              borderColor: accentColor,
+              shadowColor: accentColor,
+            },
+          ]}
+        >
           <View style={styles.infoContainer}>
-            <ThemedText style={styles.label}>
-              Nome: <ThemedText style={styles.value}>{user.nome}</ThemedText>
+            <ThemedText style={[styles.label, { color: subtitleColor }]}>
+              Nome:{" "}
+              <ThemedText style={[styles.value, { color: textColor }]}>
+                {user.nome}
+              </ThemedText>
             </ThemedText>
-
-            <ThemedText style={styles.label}>
-              Idade: <ThemedText style={styles.value}>{user.idade}</ThemedText>
+            <ThemedText style={[styles.label, { color: subtitleColor }]}>
+              Idade:{" "}
+              <ThemedText style={[styles.value, { color: textColor }]}>
+                {user.idade}
+              </ThemedText>
             </ThemedText>
-
-            <ThemedText style={styles.label}>
-              Email: <ThemedText style={styles.value}>{user.email}</ThemedText>
+            <ThemedText style={[styles.label, { color: subtitleColor }]}>
+              Email:{" "}
+              <ThemedText style={[styles.value, { color: textColor }]}>
+                {user.email}
+              </ThemedText>
             </ThemedText>
-            <ThemedText style={styles.label}>
-              Senha: <ThemedText style={styles.value}>{user.senha}</ThemedText>
+            <ThemedText style={[styles.label, { color: subtitleColor }]}>
+              Senha:{" "}
+              <ThemedText style={[styles.value, { color: textColor }]}>
+                {user.senha}
+              </ThemedText>
             </ThemedText>
-            <ThemedText style={styles.label}>
+            <ThemedText style={[styles.label, { color: subtitleColor }]}>
               Altura:{" "}
-              <ThemedText style={styles.value}>{user.altura}</ThemedText>
+              <ThemedText style={[styles.value, { color: textColor }]}>
+                {user.altura}
+              </ThemedText>
             </ThemedText>
-            <ThemedText style={styles.label}>
-              Peso: <ThemedText style={styles.value}>{user.peso}</ThemedText>
+            <ThemedText style={[styles.label, { color: subtitleColor }]}>
+              Peso:{" "}
+              <ThemedText style={[styles.value, { color: textColor }]}>
+                {user.peso}
+              </ThemedText>
             </ThemedText>
-            <ThemedText style={styles.label}>
-              Sexo: <ThemedText style={styles.value}>{user.sexo}</ThemedText>
+            <ThemedText style={[styles.label, { color: subtitleColor }]}>
+              Sexo:{" "}
+              <ThemedText style={[styles.value, { color: textColor }]}>
+                {user.sexo}
+              </ThemedText>
             </ThemedText>
-            <ThemedText style={styles.label}>
+            <ThemedText style={[styles.label, { color: subtitleColor }]}>
               Telefone:{" "}
-              <ThemedText style={styles.value}>{user.telefone}</ThemedText>
+              <ThemedText style={[styles.value, { color: textColor }]}>
+                {user.telefone}
+              </ThemedText>
             </ThemedText>
           </View>
         </ThemedView>
 
-        <ScrollView style={styles.treinoContainer}>
-          <ThemedText type="title" style={styles.titleContainer}>
+        <View style={styles.treinoContainer}>
+          <ThemedText type="title" style={styles.sectionTitle}>
             Treinos
           </ThemedText>
           {treinosByDay.map((day) => (
-            <ThemedView key={day.collection} style={styles.dayBlock}>
+            <ThemedView
+              key={day.collection}
+              style={[
+                styles.dayBlock,
+                { backgroundColor: cardBackground, borderColor: accentColor },
+              ]}
+            >
               <ThemedText
                 type="defaultSemiBold"
                 style={[styles.dayTitle, { color: day.color }]}
@@ -199,24 +257,54 @@ export default function InformacoesAluno() {
                 {day.label}
               </ThemedText>
               {day.items.length === 0 ? (
-                <ThemedText style={styles.noTreinoText}>
+                <ThemedText
+                  style={[styles.noTreinoText, { color: subtitleColor }]}
+                >
                   Nenhum treino definido para este dia.
                 </ThemedText>
               ) : (
                 day.items.map((item: any) => (
-                  <ThemedView key={item.id} style={styles.treinoItem}>
-                    <ThemedText type="defaultSemiBold">
+                  <ThemedView
+                    key={item.id}
+                    style={[
+                      styles.treinoItem,
+                      { backgroundColor: pageBackground },
+                    ]}
+                  >
+                    <ThemedText
+                      type="defaultSemiBold"
+                      style={[styles.treinoTitle, { color: textColor }]}
+                    >
                       {item.exercicio?.nome ?? `Exercício ${item.id_exercicio}`}
                     </ThemedText>
-                    <ThemedText>{item.exercicio?.descricao ?? ""}</ThemedText>
-                    <ThemedText>Séries: {item.series}</ThemedText>
-                    <ThemedText>Repetições: {item.repeticoes}</ThemedText>
-                    <ThemedText>Carga: {item.carga}</ThemedText>
+                    <ThemedText
+                      style={[styles.treinoText, { color: subtitleColor }]}
+                    >
+                      {item.exercicio?.descricao ?? ""}
+                    </ThemedText>
+                    <ThemedText
+                      style={[styles.treinoText, { color: subtitleColor }]}
+                    >
+                      Séries: {item.series}
+                    </ThemedText>
+                    <ThemedText
+                      style={[styles.treinoText, { color: subtitleColor }]}
+                    >
+                      Repetições: {item.repeticoes}
+                    </ThemedText>
+                    <ThemedText
+                      style={[styles.treinoText, { color: subtitleColor }]}
+                    >
+                      Carga: {item.carga}
+                    </ThemedText>
                     <Pressable
                       onPress={() => deleteTreino(item.id, day.collection)}
-                      style={styles.button_2}
+                      style={[
+                        styles.smallButton,
+                        { backgroundColor: buttonColor },
+                      ]}
                     >
-                      <ThemedText style={{ color: "black" }}>
+                      <ThemedText style={styles.smallButtonText}>
                         Excluir treino
                       </ThemedText>
                     </Pressable>
@@ -225,24 +313,37 @@ export default function InformacoesAluno() {
               )}
             </ThemedView>
           ))}
-        </ScrollView>
+        </View>
 
-        <TouchableOpacity
+        <Pressable
+          style={[styles.actionButton, { backgroundColor: buttonColor }]}
           onPress={() => router.push(`/adm_screens/editar_informacoes/${id}`)}
         >
-          <ThemedText style={styles.button}>Editar informações</ThemedText>
-        </TouchableOpacity>
+          <ThemedText type="defaultSemiBold" style={styles.actionButtonText}>
+            Editar informações
+          </ThemedText>
+        </Pressable>
         <Pressable
-          style={styles.button_3}
+          style={[styles.actionButton, { backgroundColor: accentColor }]}
           onPress={() => router.push(`/adm_screens/definir_treino/${id}`)}
         >
-          <ThemedText>Definir treino</ThemedText>
+          <ThemedText type="defaultSemiBold" style={styles.actionButtonText}>
+            Definir treino
+          </ThemedText>
         </Pressable>
-        <Pressable onPress={() => deleteUser(id)} style={styles.button_2}>
-          <ThemedText style={{ color: "black" }}>Excluir aluno</ThemedText>
+        <Pressable
+          onPress={() => deleteUser(id)}
+          style={[styles.deleteButton, { backgroundColor: "#f87171" }]}
+        >
+          <ThemedText type="defaultSemiBold" style={styles.actionButtonText}>
+            Excluir aluno
+          </ThemedText>
         </Pressable>
-        <Link href="/adm_home" dismissTo>
-          <ThemedText type="defaultSemiBold" style={styles.cardText}>
+        <Link href="/adm_home" dismissTo style={styles.linkButton}>
+          <ThemedText
+            type="defaultSemiBold"
+            style={[styles.linkText, { color: accentColor }]}
+          >
             Voltar para Home
           </ThemedText>
         </Link>
@@ -252,17 +353,66 @@ export default function InformacoesAluno() {
 }
 
 const styles = StyleSheet.create({
-  titleContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    gap: 8,
-    padding: 10,
+  scrollView: {
+    paddingVertical: 24,
   },
   container: {
     flex: 1,
+    padding: 24,
     alignItems: "center",
-    justifyContent: "center",
+    justifyContent: "flex-start",
+  },
+  hero: {
+    width: "100%",
+    maxWidth: 520,
+    borderRadius: 24,
+    padding: 24,
+    marginBottom: 24,
+    shadowColor: "#8B5CF6",
+    shadowOffset: { width: 0, height: 14 },
+    shadowOpacity: 0.18,
+    shadowRadius: 22,
+    elevation: 6,
+  },
+  heroTitle: {
+    color: "#FFFFFF",
+    marginBottom: 10,
+    textAlign: "center",
+  },
+  heroSubtitle: {
+    color: "rgba(255,255,255,0.92)",
+    fontSize: 15,
+    lineHeight: 22,
+    textAlign: "center",
+  },
+  sectionTitle: {
+    marginBottom: 16,
+    textAlign: "center",
+  },
+  card: {
+    width: "100%",
+    maxWidth: 520,
+    borderRadius: 20,
     padding: 20,
+    marginBottom: 20,
+    borderWidth: 1,
+    shadowOffset: { width: 0, height: 10 },
+    shadowOpacity: 0.16,
+    shadowRadius: 18,
+    elevation: 5,
+  },
+  infoContainer: {
+    width: "100%",
+    gap: 10,
+  },
+  label: {
+    fontSize: 16,
+    marginBottom: 8,
+    textAlign: "left",
+  },
+  value: {
+    color: "#fff",
+    fontWeight: "600",
   },
   treinoContainer: {
     width: "100%",
@@ -270,96 +420,85 @@ const styles = StyleSheet.create({
   },
   dayBlock: {
     width: "100%",
-    borderRadius: 16,
-    padding: 16,
+    borderRadius: 20,
+    padding: 18,
     marginBottom: 14,
-    backgroundColor: "rgba(255,255,255,0.08)",
+    borderWidth: 1,
   },
   dayTitle: {
     fontSize: 18,
-    marginBottom: 10,
+    marginBottom: 12,
   },
   noTreinoText: {
     fontSize: 14,
-    color: "#94a3b8",
+    marginBottom: 12,
   },
   treinoItem: {
-    padding: 12,
-    borderRadius: 12,
-    backgroundColor: "rgba(0,0,0,0.08)",
-    marginBottom: 10,
+    padding: 16,
+    borderRadius: 16,
+    backgroundColor: "rgba(255,255,255,0.06)",
+    marginBottom: 12,
   },
-  stepContainer: {
-    gap: 8,
-    marginBottom: 8,
-  },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: "absolute",
-  },
-  input: {
-    color: "#ffffff",
-    borderWidth: 1,
-    borderColor: "#ccc",
-    padding: 10,
-    borderRadius: 5,
-    marginBottom: 10,
-  },
-  button: {
-    backgroundColor: "#007bff",
-    marginBottom: 10,
-    padding: 10,
-    borderRadius: 5,
-    alignItems: "center",
-  },
-  button_2: {
-    backgroundColor: "yellow",
-    marginBottom: 10,
-    padding: 10,
-    borderRadius: 5,
-    alignItems: "center",
-  },
-  button_3: {
-    backgroundColor: "red",
-    marginBottom: 10,
-    padding: 10,
-    borderRadius: 5,
-    alignItems: "center",
-  },
-  link: {
-    marginTop: 15,
-    paddingVertical: 15,
-  },
-  cardText: {
-    fontSize: 18,
-    fontWeight: "700",
-    color: "#ffffff",
-  },
-  card: {
-    backgroundColor: "#111",
-    padding: 20,
-    borderRadius: 12,
-    marginBottom: 20,
-    borderWidth: 1,
-    borderColor: "#6b42c1",
-    justifyContent: "center", // 🔹 Centraliza verticalmente
-    alignItems: "center", // 🔹 Centraliza horizontalmente
-    minHeight: 250, // 🔹 Dá altura mínima para o conteúdo ficar no meio
-  },
-  infoContainer: {
-    alignItems: "center", // 🔹 Centraliza o texto dentro do card
-  },
-  label: {
-    color: "#aaa",
+  treinoTitle: {
     fontSize: 16,
-    marginBottom: 8,
-    textAlign: "center",
+    fontWeight: "700",
+    marginBottom: 6,
   },
-  value: {
-    color: "#fff",
-    fontWeight: "600",
+  treinoText: {
+    fontSize: 14,
+    marginBottom: 4,
+  },
+  smallButton: {
+    marginTop: 12,
+    paddingVertical: 12,
+    borderRadius: 14,
+    alignItems: "center",
+  },
+  smallButtonText: {
+    color: "#ffffff",
+    fontWeight: "700",
+  },
+  actionButton: {
+    width: "100%",
+    maxWidth: 520,
+    borderRadius: 18,
+    paddingVertical: 16,
+    alignItems: "center",
+    marginBottom: 12,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 10 },
+    shadowOpacity: 0.18,
+    shadowRadius: 18,
+    elevation: 5,
+  },
+  actionButtonText: {
+    color: "#ffffff",
+    fontSize: 16,
+    fontWeight: "700",
+  },
+  deleteButton: {
+    width: "100%",
+    maxWidth: 520,
+    borderRadius: 18,
+    paddingVertical: 16,
+    alignItems: "center",
+    marginBottom: 12,
+    shadowColor: "#000",
+    shadowOffset: { width: 0, height: 10 },
+    shadowOpacity: 0.18,
+    shadowRadius: 18,
+    elevation: 5,
+  },
+  linkButton: {
+    width: "100%",
+    maxWidth: 520,
+    borderRadius: 18,
+    paddingVertical: 16,
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  linkText: {
+    fontSize: 16,
+    textAlign: "center",
   },
 });
