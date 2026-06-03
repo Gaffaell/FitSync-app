@@ -439,6 +439,7 @@ const styles = StyleSheet.create({
     width: "100%",
     maxWidth: 520,
     paddingVertical: 16,
+    textAlign: "center",
     alignItems: "center",
     justifyContent: "center",
   },
