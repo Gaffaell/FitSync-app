@@ -382,6 +382,7 @@ const styles = StyleSheet.create({
     paddingVertical: 16,
     borderRadius: 18,
     alignItems: "center",
+    textAlign: "center",
     justifyContent: "center",
   },
   linkText: {

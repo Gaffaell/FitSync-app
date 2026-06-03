@@ -24,7 +24,7 @@ const db = getFirestore(app);
 export default function Feedback() {
   const { dia, user_id } = useLocalSearchParams();
   const accentColor = useThemeColor({}, "accent");
-  const tintColor = useThemeColor({}, "tint");
+  const tintColor = useThemeColor({}, "text");
   const buttonColor = useThemeColor({}, "button");
   const surfaceColor = useThemeColor(
     { light: "#F8FAFC", dark: "#111827" },

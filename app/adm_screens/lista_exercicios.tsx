@@ -212,4 +212,18 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     alignItems: "center",
   },
+  linkButton: {
+    width: "100%",
+    maxWidth: 520,
+    marginTop: 12,
+    borderRadius: 16,
+    paddingVertical: 16,
+    alignItems: "center",
+    textAlign: "center",
+    justifyContent: "center",
+  },
+  linkText: {
+    fontSize: 16,
+    textAlign: "center",
+  },
 });
